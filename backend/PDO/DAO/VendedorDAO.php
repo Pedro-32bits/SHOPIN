@@ -3,7 +3,7 @@
 
         //Create - inserir 
         function inserir ($vendedor){
-            include "../BACKEND/PDO/conexao.php";
+            include "../PDO/conexao.php";
             $sql = "INSERT INTO vendedor (nome, email, telefone, foto, senha, CPF, CNPJ) VALUES (:nome, :email, :telefone, :foto, :senha, :CPF, :CNPJ)";
             $consulta = $conexao->prepare($sql); 
             $consulta->bindValue(":nome", $vendedor->getNome());
@@ -23,8 +23,8 @@
 
         //Read - ler
         function listar(){
-           include "../BACKEND/conexao.php";
-            $sql = "SELECT * FROM aluno";
+           include "../PDO/conexao.php";
+            $sql = "SELECT * FROM vendedor";
             $consulta = $conexao->prepare($sql);
             $consulta->execute();
             return $consulta->fetchALL();
@@ -32,7 +32,7 @@
 
         //Update - Atualizar
             function atualizar($vendedor){
-                include "../BACKEND/PDO/conexao.php";
+                include "../PDO/conexao.php";
                 $sql = "UPDATE vendedor SET nome=:nome, email=:email, telefone=:telefone, foto=:foto, senha=:senha, cpf=:cpf, cnpj=:cnpj WHERE cod = :cod";
                 $consulta = $conexao->prepare($sql);
                 $consulta->bindValue(":cod", $vendedor->getCod());
@@ -47,7 +47,7 @@
 
             //Delete - Apagar 
                 function apagar ($cod){
-                    include "../BACKEND/PDO/conexao.php";
+                    include "../PDO/conexao.php";
                         $sql = "DELETE FROM   vendedor WHERE cod = :cod"; 
                         $consulta = $conexao -> prepare ($sql);
                         $consulta -> bindValue (":cod" , $cod);
@@ -61,7 +61,7 @@
 
                 //Logar 
                  function logar ($email, $senha, $nome ){
-                    include "../BACKEND/PDO/conexao.php";
+                    include "../PDO/conexao.php";
                     $sql = "SELECT * FROM vendedor WHERE (email = :email) AND (senha = :senha) AND (nome = :nome";
                     $consulta = $conexao -> prepare ($sql);
                     $consulta -> bindValue ( ":email" , $email);
@@ -73,7 +73,7 @@
 
                  //Buscar
                  function buscar($pesquisa){
-                    include "..BACKEND/PDO/conexao.php";
+                    include "../PDO/conexao.php";
                     $sql = "SELECT * FROM vendedor WHERE nome LIKE :pesquisa";
                     $consulta = $conexao -> prepare($sql);
                     $consulta  -> bindValue (":pesquisa", "%".$pesquisa."%");

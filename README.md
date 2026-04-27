@@ -1,4 +1,7 @@
 # SHOPIN
-trabalho escolar
+    trabalho escolar
 
-lembrar de fazer as paginas do frontend
+# Dia 26/04/26 
+    terminei o PDO 
+
+        ¿como vou fazer para cada vendedor ver apenas o seu proprio produto?
