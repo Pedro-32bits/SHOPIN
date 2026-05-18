@@ -35,7 +35,7 @@ class Vendedor {
     public function getFoto() {
 		return $this-> foto;
 		}    
-    public function setfoto($value){
+    public function setFoto($value){
         $this -> foto = $value;
     }
 
@@ -49,10 +49,10 @@ class Vendedor {
     }
 
     public function getValidacao() {
-		return $this-> foto;
+		return $this-> validacao;
 		}    
     public function setValidacao($value){
-        $this -> foto = $value;
+        $this -> validacao = $value;
     }
     
     public function getCPF() {
@@ -68,15 +68,13 @@ class Vendedor {
 		}
     public function setCNPJ($value){
         $this -> CNPJ = $value;
-    
-}
+    }
 
     public function getNome() {
 		return $this-> nome;
 		}
     public function setNome($value){
         $this -> nome = $value;
-    
-}
+    }
 }
 ?>

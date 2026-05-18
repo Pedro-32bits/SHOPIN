@@ -24,13 +24,13 @@ switch($acao){
             session_start();
             $_SESSION['email'] = $resultado['email'];
             $_SESSION['senha'] = $resultado['senha'];
-            $_SESION['nome'] = $resultado ['nome'];
-            $_SESION['telefone'] = $resultado ['telefone'];
+            $_SESSION['nome'] = $resultado ['nome'];
+            $_SESSION['telefone'] = $resultado ['telefone'];
 
-            header("location: ../");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php");
         }
         else{
-            header("location: ../loginVendedor.php? erro=4");
+            header("location: ../../../FRONTEND/vendedor/loginVend.php?erro=4");
         }
     break;
 
@@ -41,12 +41,13 @@ switch($acao){
         $vendedor -> setCNPJ($CNPJ);
         $vendedor -> setFoto($foto);
         $vendedor -> setNome($nome);
+        $vendedor -> setTelefone($telefone);
 
-        if($dao -> inserir($aluno)){
-            header("location: ../loginVendedor.php");
+        if($dao -> inserir($vendedor)){
+            header("location: ../../../FRONTEND/vendedor/vendedor.php");
         }
         else{
-            header("location ../loginVendedor.php?erro=1");
+            header("location: ../../../FRONTEND/vendedor/loginVend.php?erro=1");
         }
     break;
 
@@ -60,20 +61,20 @@ switch($acao){
         $vendedor -> setFoto($foto);
         $vendedor -> setNome($nome);
 
-        if ($dao -> atualizar($aluno)){
-            header("location: ../casdastroVendendor.php");
+        if ($dao -> atualizar($vendedor)){
+            header("location: ../../../FRONTEND/vendedor/vendedor.php");
         }
         else{
-            header("location: ../cadastroVendedor.php ?erro=3");
+            header("location: ../../../FRONTEND/vendedor/cadastroVend.php?erro=3");
         }
     break;
 
     case "Apagar":
         if ($dao -> apagar($cod)){
-            header("location: ../cadastroVendedor.php");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php");
         }
         else {
-            header("location: ../castroVendedor.php? erro=2");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php?erro=2");
         }
         break;
 
