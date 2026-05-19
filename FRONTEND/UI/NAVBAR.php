@@ -1,5 +1,5 @@
-<?php include "cdns.php"?>
 
+<?php include "gatinhos.js" ?>
 <style>
     /* Estilos customizados para bater com o design */
     .header-gradient {

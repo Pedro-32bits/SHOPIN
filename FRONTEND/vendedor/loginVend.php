@@ -167,7 +167,7 @@ if (isset($_POST['acao']) && $_POST['acao'] == "Logar") {
 
         <h3>Login Vendedor</h3>
 
-        <form method="POST" action="CONTROLLER/VendedorController.php">
+        <form method="POST" action="../../BACKEND/PDO/CONTROLLER/VendedorController.php">
 
             <label>E-mail:</label>
             <input type="text" name="email" placeholder="user@gmail.com" required>

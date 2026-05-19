@@ -1,0 +1,199 @@
+/* =========================================
+   1. IMPORTAÇÃO DE FONTES E VARIÁVEIS
+========================================= */
+@font-face {
+    font-family: 'Pagkaki';
+    src: url('../fonts/Pagkaki-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --bg-bege: #E6DED3;
+    --shopin-red: #A30F06;
+    --shopin-terracota: #A30F06;
+    --dark-red: #800c05;
+}
+
+
+/* =========================================
+   2. ESTILOS GLOBAIS E FONTES CUSTOMIZADAS
+========================================= */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-bege);
+    color: #333;
+}
+
+.font-pagkaki {
+    font-family: 'Pagkaki', sans-serif;
+}
+
+.font-cordel {
+    font-family: 'Metamorphous', serif;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   3. COMPONENTES SHOPIN (Da sua index.php)
+========================================= */
+.promo-banner {
+    background-color: var(--shopin-terracota);
+    border-radius: 2rem;
+    color: white;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.btn-banner {
+    background-color: white;
+    color: var(--shopin-terracota);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 0px var(--dark-red);
+    transition: all 0.2s ease;
+}
+
+.btn-banner:hover {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0px var(--dark-red);
+}
+
+.product-card {
+    background-color: var(--shopin-red);
+    border-radius: 16px;
+    padding: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.product-image-container {
+    background-color: white;
+    border-radius: 10px;
+    height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* =========================================
+   4. FORMULÁRIOS DE AUTENTICAÇÃO (Login/Cadastro)
+========================================= */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-container {
+    background: #b30000;
+    padding: 30px;
+    width: 350px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.auth-logo {
+    width: 120px;
+    margin-bottom: 15px;
+}
+
+.auth-label {
+    width: 90%;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+    display: block;
+    margin: 10px auto 0;
+}
+
+.auth-input,
+.auth-input-group {
+    width: 90%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    margin: 5px auto 0;
+}
+
+.auth-input-group {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 0 10px;
+}
+
+.auth-input-group input {
+    border: none;
+    flex: 1;
+    padding: 10px 0;
+    outline: none;
+    box-shadow: none;
+    margin: 0;
+}
+
+.auth-toggle {
+    cursor: pointer;
+    font-size: 18px;
+    color: black;
+}
+
+.auth-botoes {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.auth-btn {
+    width: 45%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.auth-btn-submit {
+    background: white;
+    color: #b30000;
+}
+
+.auth-btn-submit:hover {
+    background: #ffe5e5;
+}
+
+.auth-btn-reset {
+    background: #800000;
+    color: white;
+}
+
+.auth-btn-reset:hover {
+    background: #660000;
+}
+
+.auth-link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}

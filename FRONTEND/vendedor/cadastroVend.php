@@ -131,6 +131,7 @@
             <label>Senha:</label>
             <input type="password" name="senha" placeholder="Sua senha"  placeholder="insira sua senha" required>
 
+
             <label>Confirmar Senha:</label>
             <input type="password" name="confirmar_senha" placeholder="Confirme sua senha" required>
 

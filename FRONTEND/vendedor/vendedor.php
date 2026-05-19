@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <body class="bg-[#E6DED3]">
-
+ <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <?php include "../UI/NAVBAR.php"; ?>
 
     <div class="container mx-auto px-4 py-10">
