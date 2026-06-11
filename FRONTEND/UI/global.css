@@ -1,0 +1,363 @@
+/* =========================================
+   1. IMPORTAÇÃO DE FONTES E VARIÁVEIS
+========================================= */
+@font-face {
+    font-family: 'Pagkaki';
+    src: url('../fonts/Pagkaki-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --bg-bege: #E6DED3;
+    --shopin-red: #A30F06;
+    --dark-red: #800c05;
+}
+
+
+/* =========================================
+   2. ESTILOS GLOBAIS E FONTES CUSTOMIZADAS
+========================================= */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-bege);
+    color: #333;
+}
+
+.font-pagkaki {
+    font-family: 'Pagkaki', sans-serif;
+}
+
+.font-cordel {
+    font-family: 'Metamorphous', serif;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   3. COMPONENTES SHOPIN (Da sua index.php)
+========================================= */
+.promo-banner {
+    background-color: var(--shopin-red);
+    border-radius: 2rem;
+    color: white;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.btn-banner {
+    background-color: white;
+    color: var(--shopin-red);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 0px var(--dark-red);
+    transition: all 0.2s ease;
+}
+
+.btn-banner:hover {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0px var(--dark-red);
+}
+
+.product-card {
+    background-color: var(--shopin-red);
+    border-radius: 16px;
+    padding: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.product-image-container {
+    background-color: white;
+    border-radius: 10px;
+    height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* =========================================
+   4. FORMULÁRIOS DE AUTENTICAÇÃO (Login/Cadastro)
+========================================= */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #A30F06 0%, #7d0b04 100%);
+    padding: 20px;
+}
+
+.auth-container {
+    background: white;
+    padding: 40px 30px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    color: #333;
+}
+
+.auth-logo {
+    width: 100px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+}
+
+.auth-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #A30F06;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auth-label {
+    width: 100%;
+    text-align: left;
+    margin: 15px 0 6px 0;
+    font-weight: 700;
+    display: block;
+    font-size: 13px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.auth-input,
+.auth-input-group {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 5px;
+    border: 2px solid #E6DED3;
+    border-radius: 10px;
+    outline: none;
+    box-shadow: none;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.auth-input {
+    background: #fafafa;
+}
+
+.auth-input:focus,
+.auth-input:hover {
+    border-color: #A30F06;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(163, 15, 6, 0.1);
+}
+
+.auth-input::placeholder {
+    color: #999;
+}
+
+.auth-input-group {
+    display: flex;
+    align-items: center;
+    background: #fafafa;
+    padding: 0 15px;
+    gap: 10px;
+}
+
+.auth-input-group:focus-within {
+    border-color: #A30F06;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(163, 15, 6, 0.1);
+}
+
+.auth-input-group input {
+    border: none;
+    flex: 1;
+    padding: 12px 0;
+    outline: none;
+    box-shadow: none;
+    margin: 0;
+    background: transparent;
+    font-size: 14px;
+}
+
+.auth-toggle {
+    cursor: pointer;
+    font-size: 18px;
+    user-select: none;
+    color: #A30F06;
+    transition: 0.2s;
+}
+
+.auth-toggle:hover {
+    transform: scale(1.2);
+}
+
+.auth-botoes {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+    justify-content: center;
+}
+
+.auth-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-btn:active {
+    transform: scale(0.98);
+}
+
+.auth-btn-submit {
+    background: linear-gradient(135deg, #A30F06 0%, #7d0b04 100%);
+    color: white;
+}
+
+.auth-btn-submit:hover {
+    background: linear-gradient(135deg, #8a0d05 0%, #650a03 100%);
+    box-shadow: 0 6px 20px rgba(163, 15, 6, 0.3);
+    transform: translateY(-2px);
+}
+
+.auth-btn-reset {
+    background: #E6DED3;
+    color: #A30F06;
+    border: 2px solid #A30F06;
+}
+
+.auth-btn-reset:hover {
+    background: #A30F06;
+    color: white;
+    box-shadow: 0 6px 20px rgba(163, 15, 6, 0.3);
+    transform: translateY(-2px);
+}
+
+.auth-link-container {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #E6DED3;
+}
+
+.auth-link {
+    color: #A30F06;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.auth-link:hover {
+    color: #7d0b04;
+    text-decoration: underline;
+}
+
+.auth-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* =========================================
+   5. UPLOAD DE FOTO
+========================================= */
+.photo-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    border: 3px dashed #A30F06;
+    border-radius: 15px;
+    background: #fafafa;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.photo-upload-container:hover {
+    background: #fff5f2;
+    border-color: #7d0b04;
+    box-shadow: 0 0 0 3px rgba(163, 15, 6, 0.1);
+}
+
+.photo-upload-container.drag-over {
+    background: #fff5f2;
+    border-color: #A30F06;
+    box-shadow: 0 0 0 5px rgba(163, 15, 6, 0.2);
+    transform: scale(1.02);
+}
+
+.photo-upload-icon {
+    font-size: 48px;
+    color: #A30F06;
+    margin-bottom: 10px;
+}
+
+.photo-upload-text {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.photo-upload-subtext {
+    color: #999;
+    font-size: 12px;
+}
+
+.photo-preview {
+    position: relative;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.photo-preview img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.photo-remove-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #A30F06;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.photo-remove-btn:hover {
+    background: #7d0b04;
+    transform: scale(1.1);
+}
+
+#photoInput {
+    display: none;
+}
