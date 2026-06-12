@@ -54,9 +54,12 @@ if (isset($_GET['erro'])) {
                 <div class="bg-white rounded-2xl shadow-sm p-6 text-center border-b-4 border-[#A30F06]">
                     <div class="flex justify-center mb-4">
                         <div class="w-32 h-32 rounded-full bg-[#E6DED3] border-4 border-[#E6DED3] flex items-center justify-center">
-                            <i class="fas fa-user text-[#A30F06] text-5xl"></i>
+                            <img src="<?php echo strpos($_SERVER['PHP_SELF'], 'cliente') !== false ? '../' : ''; ?><?php echo !empty($foto_cliente) ? $foto_cliente : 'img/user-placeholder.php'; ?>" class="w-8 h-8 rounded-full object-cover" onerror="this.src='<?php echo strpos($_SERVER['PHP_SELF'], 'cliente') !== false ? '../' : ''; ?>img/placeholder.php'">
                         </div>
                     </div>
+                    
+
+
                     
                     <h2 class="font-pagkaki text-2xl mt-4 text-gray-800"><?php echo htmlspecialchars($nome); ?></h2>
                     <p class="text-sm text-gray-500 italic">Cliente</p>

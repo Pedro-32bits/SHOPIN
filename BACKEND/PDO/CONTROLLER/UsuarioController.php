@@ -27,10 +27,16 @@ switch ($acao) {
             $_SESSION['senha'] = $resultado['senha'];
             $_SESSION['tipo'] = $resultado['tipo'] ?? 'cliente';
 
-            header("location: ../../../FRONTEND/index.php");
-        } else {
-            header("location: ../../../FRONTEND/index.php?erro=4");
+            if($_SESSION['tipo']=== 'cliente'){
+                header("location: ../../../FRONTEND/cliente/usuario.php");
+            }else{
+                header("location ../../../FRONTEND/vendedor/vendedor.php");
+                }
+            
+        }else  {
+                header("location: ../../../FRONTEND/index.php?erro=4");
         }
+        
         break;
 
 //😍<-marcos

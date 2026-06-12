@@ -118,11 +118,11 @@ $totalProdutos = count($produtos);
 
                                 <td class="p-5">
                                     <div class="flex justify-center gap-3">
-                                        <button class="bg-blue-100 text-blue-600 w-11 h-11 rounded-xl hover:scale-105 transition">
+                                        <button class="bg-blue-100 text-blue-600 w-11 h-11 rounded-xl hover:scale-105 transition" >
                                             <i class="fas fa-edit"></i>
                                         </button>
 
-                                        <button class="bg-red-100 text-red-600 w-11 h-11 rounded-xl hover:scale-105 transition">
+                                        <button class="bg-red-100 text-red-600 w-11 h-11 rounded-xl hover:scale-105 transition" >
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -403,9 +403,8 @@ $totalProdutos = count($produtos);
         }
 
         function handleFileSelect(e) {
+            if (!e.target.files.length) return;
             handleFiles(e.target.files);
-            // Limpa o input para permitir re-seleção do mesmo arquivo
-            e.target.value = '';
         }
 
         function handleFiles(files) {

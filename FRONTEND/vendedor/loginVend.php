@@ -57,7 +57,7 @@ if (isset($_GET['erro'])) {
             <input type="text" name="telefone" class="auth-input mask-phone" placeholder="(00)00000-0000" required>
 
             <div class="auth-botoes">
-                <button type="submit" name="acao" value="tornarVendedor" class="auth-btn auth-btn-submit">Entrar</button>
+                <button type="submit" name="acao" value="Logar" class="auth-btn auth-btn-submit">Entrar</button>
                 <button type="reset" class="auth-btn auth-btn-reset">Cancelar</button>
             </div>
         </form>

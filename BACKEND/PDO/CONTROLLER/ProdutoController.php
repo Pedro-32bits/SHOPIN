@@ -1,7 +1,7 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /shopin/FRONTEND/index.php');
+    header('Location: /../FRONTEND/index.php');
     exit();
 }
 require "../MODEL/Produto.php";
@@ -28,7 +28,7 @@ $promocao = isset($_POST['promocao']) ? $_POST['promocao'] : "";
 switch ($acao) {
     case "Inserir":
         if (empty($cod_usuario)) {
-            header("location: ../../shopin/FRONTEND/vendedor/loginVend.php");
+            header("location: ../../../FRONTEND/vendedor/loginVend.php");
             exit();
         }
         $produto->setCodUsuario($cod_usuario);
@@ -41,7 +41,7 @@ switch ($acao) {
         $produtoId = $dao->inserir($produto);
         if ($produtoId !== false) {
             if (isset($_FILES['fotos']) && !empty($_FILES['fotos']['name'][0])) {
-                $uploadDir = __DIR__ . "/../../shopin/FRONTEND/img/produtos/";
+                $uploadDir = __DIR__ . "/../../../FRONTEND/img/produtos/";
 
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
@@ -76,9 +76,9 @@ switch ($acao) {
                     }
                 }
             }
-            header("location: ../../shopin/FRONTEND/vendedor/vendedor.php");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php");
         } else {
-            header("location: ../../shopin/FRONTEND/vendedor/loginVend.php?erro=1");
+            header("location: ../../../FRONTEND/vendedor/loginVend.php?erro=1");
         }
         break;
 
@@ -93,17 +93,17 @@ switch ($acao) {
         $produto->setPromocao($promocao);
 
         if ($dao->atualizar($produto)) {
-            header("location: ../../shopin/FRONTEND/vendedor/cadastro.php");
+            header("location: ../../../FRONTEND/vendedor/cadastro.php");
         } else {
-            header("location: ../../shopin/FRONTEND/vendedor/cadastro.php?erro=3");
+            header("location: ../../../FRONTEND/vendedor/cadastro.php?erro=3");
         }
         break;
 
     case "Apagar":
         if ($dao->apagar($cod_produto)) {
-            header("location: ../../shopin/FRONTEND/vendedor/cadastroProduto.php");
+            header("location: ../../../FRONTEND/vendedor/cadastroProduto.php");
         } else {
-            header("location: ../../shopin/FRONTEND/vendedor/cadastroProduto.php? erro=2");
+            header("location: ../../../FRONTEND/vendedor/cadastroProduto.php? erro=2");
         }
         break;
 
