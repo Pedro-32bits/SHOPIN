@@ -1,5 +1,12 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors' , 1);
+ob_start();
 require __DIR__ . "/../BACKEND/PDO/DAO/ProdutoDAO.php";
 require __DIR__ . "/../BACKEND/PDO/DAO/FotoDAO.php";
 
@@ -173,4 +180,5 @@ $usuario_logado = isset($_SESSION['cod_usuario']);
     </script>
 
 </body>
+
 </html>

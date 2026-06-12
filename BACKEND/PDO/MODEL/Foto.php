@@ -1,20 +1,20 @@
 <?php
 
 /*CREATE TABLE `foto` (
-  `foto_PK` int(11) NOT NULL,
+  `foto_cod` int(11) NOT NULL,
   `cod_produto` int(11) DEFAULT NULL,
   `foto` varchar(255) DEFAULT NULL*/
   
   class Foto{
-    private $foto_PK;
+    private $cod_foto;
     private $cod_produto;
     private $foto;
 
-      public function getFoto_PK() {
-		  return $this-> foto_PK;
+      public function getCod_foto() {
+		  return $this-> cod_foto;
 		}
-    public function setFoto_PK($value){
-        $this -> foto_PK =$value;
+    public function setCod_foto($value){
+        $this -> cod_foto =$value;
     }
 
     public function getCod_produto(){

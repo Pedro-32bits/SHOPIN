@@ -1,31 +1,15 @@
 <?php
-$host = "localhost";
-$banco = "shopin";
-$user = "root";
-$pass = "";
-
-$conexao = new PDO(
-    "mysql:host=$host;dbname=$banco;charset=utf8mb4",
-    $user,
-    $pass,
-    [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]
-);
-?>
-<?php
     class FotoDAO {
 
         // Create - Inserir
-        function inserir($fotoObjeto) {
+        function inserir($fotoObj) {
             include __DIR__ . "/../conexao.php";
 
             try {
                 $sql = "INSERT INTO foto (cod_produto, foto) VALUES (:cod_produto, :foto)";
                 $consulta = $conexao->prepare($sql);
-                $consulta->bindValue(":cod_produto", (int) $fotoObjeto->getCod_produto());
-                $consulta->bindValue(":foto", (string) $fotoObjeto->getFoto());
+                $consulta->bindValue(":cod_produto", (int) $fotoObj->getCod_produto());
+                $consulta->bindValue(":foto", (string) $fotoObj->getFoto());
 
                 return $consulta->execute();
             } catch (PDOException $e) {
@@ -44,13 +28,13 @@ $conexao = new PDO(
         }
 
         // Update - Atualizar
-        function atualizar($fotoObjeto) {
+        function atualizar($fotoObj) {
             include __DIR__ . "/../conexao.php";
-            $sql = "UPDATE foto SET cod_produto = :cod_produto, foto = :foto WHERE foto_PK = :cod";
+            $sql = "UPDATE foto SET cod_produto = :cod_produto, foto = :foto WHERE cod_foto = :cod";
             $consulta = $conexao->prepare($sql);
-            $consulta->bindValue(":cod", $fotoObjeto->getFoto_PK());
-            $consulta->bindValue(":cod_produto", $fotoObjeto->getCod_produto());
-            $consulta->bindValue(":foto", $fotoObjeto->getFoto());
+            $consulta->bindValue(":cod", $fotoObj->getCod_foto());
+            $consulta->bindValue(":cod_produto", $fotoObj->getCod_produto());
+            $consulta->bindValue(":foto", $fotoObj->getFoto());
 
             if($consulta->execute()) {
                 return true;
@@ -60,11 +44,11 @@ $conexao = new PDO(
         }
 
         // Delete - Apagar por PK
-        function apagar($cod) {
+        function apagar($fotoObj) {
             include __DIR__ . "/../conexao.php";
-            $sql = "DELETE FROM foto WHERE foto_PK = :cod"; 
+            $sql = "DELETE FROM foto WHERE cod_foto = :cod"; 
             $consulta = $conexao->prepare($sql);
-            $consulta->bindValue(":cod", $cod);
+            $consulta->bindValue(":cod", $fotoObj->getCod_foto());
 
             if($consulta->execute()) {
                 return true;
@@ -94,45 +78,3 @@ $conexao = new PDO(
         }
     }
 ?>
-<?php
-if (isset($_FILES['fotos']) && !empty($_FILES['fotos']['name'][0])) {
-    $uploadDir = __DIR__ . "/../../../FRONTEND/img/produtos/";
-
-    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0777, true) && !is_dir($uploadDir)) {
-        die("Não foi possível criar a pasta de upload.");
-    }
-
-    if (!is_writable($uploadDir)) {
-        die("Pasta de upload sem permissão de escrita.");
-    }
-
-    $allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-
-    foreach ($_FILES['fotos']['name'] as $key => $originalName) {
-        if ($_FILES['fotos']['error'][$key] !== UPLOAD_ERR_OK) {
-            continue;
-        }
-
-        $tmpName = $_FILES['fotos']['tmp_name'][$key];
-        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-
-        if (!in_array($ext, $allowedExt)) {
-            continue;
-        }
-
-        $safeName = time() . "_" . $produtoId . "_" . preg_replace('/[^A-Za-z0-9_.-]/', '_', basename($originalName));
-        $targetPath = $uploadDir . $safeName;
-
-        if (move_uploaded_file($tmpName, $targetPath)) {
-            $fotoObj = new Foto();
-            $fotoObj->setCod_produto($produtoId);
-            $fotoObj->setFoto("img/produtos/" . $safeName);
-
-            if (!$fotoDao->inserir($fotoObj)) {
-                error_log("Falha ao gravar a foto no banco: " . $safeName);
-            }
-        }
-    }
-}
-header("location: ../../../FRONTEND/vendedor/vendedor.php");
-exit;

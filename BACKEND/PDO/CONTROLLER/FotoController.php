@@ -6,7 +6,7 @@ $fotoObj = new Foto();
 $dao = new FotoDAO();
 
 $acao = isset($_POST['acao']) ? $_POST['acao'] : "";
-$pk = isset($_POST['foto_PK']) ? $_POST['foto_PK'] : "";
+$cod_foto= isset($_POST['cod_foto']) ? $_POST['cod_foto'] : "";
 $cod_prod = isset($_POST['cod_produto']) ? $_POST['cod_produto'] : "";
 $foto_path = isset($_POST['foto']) ? $_POST['foto'] : "";
 
@@ -20,7 +20,7 @@ switch($acao){
     break;
     
     case "Apagar":
-        if($dao->apagar($pk)){
+        if($dao->apagar($cod_foto)){
             header("location: ../gerenciarFoto.php?prod=$cod_prod");
         }
     break;

@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ob_start();
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -141,7 +146,7 @@
                                 : (float)$p['valor'];
                             ?>
                             <a href="produto.php?cod=<?php echo $p['cod_produto']; ?>"
-                               class="hidden h-full duration-200 ease-linear" data-carousel-item>
+                                class="hidden h-full duration-200 ease-linear" data-carousel-item>
                                 <article class="flex h-full w-full items-center justify-between gap-6 rounded-3xl bg-white/10 p-5 text-white shadow-2xl md:p-8">
                                     <div class="w-full text-center md:max-w-md md:text-left">
                                         <p class="text-[11px] uppercase tracking-[0.35em] text-white/80">Destaque</p>
@@ -161,12 +166,16 @@
 
                     <button type="button" class="absolute start-0 top-0 z-30 flex h-full items-center justify-center px-3 text-white group focus:outline-none md:px-4" data-carousel-prev>
                         <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/30 transition hover:bg-black/50">
-                            <svg class="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m15 19-7-7 7-7" /></svg>
+                            <svg class="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m15 19-7-7 7-7" />
+                            </svg>
                         </span>
                     </button>
                     <button type="button" class="absolute end-0 top-0 z-30 flex h-full items-center justify-center px-3 text-white group focus:outline-none md:px-4" data-carousel-next>
                         <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/30 transition hover:bg-black/50">
-                            <svg class="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7" /></svg>
+                            <svg class="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7" />
+                            </svg>
                         </span>
                     </button>
                 </div>
@@ -195,7 +204,7 @@
                         <p class="font-cordel text-2xl">R$<?php echo number_format($p['promocao'], 2, ',', '.'); ?></p>
 
                     <?php else: ?>
-                        
+
                         <p class="text-[10px] opacity-0 mt-2">spacer</p>
                         <p class="font-cordel text-2xl">R$<?php echo number_format($p['valor'], 2, ',', '.'); ?></p>
                     <?php endif; ?>
@@ -208,5 +217,6 @@
     <?php include "UI/footer.php"; ?>
 
 </body>
+<?php echo ob_get_clean(); ?>
 
 </html>

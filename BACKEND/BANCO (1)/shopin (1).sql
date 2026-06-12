@@ -88,6 +88,7 @@ INSERT INTO `categoria` (`cod_categoria`, `nome`) VALUES
 (49, 'Móveis de Escritório'),
 (50, 'Segurança Residencial'),
 (51, 'Smart Home e Automação');
+(52, 'decoração');
 
 -- --------------------------------------------------------
 
@@ -112,7 +113,7 @@ CREATE TABLE `endereco` (
 --
 
 CREATE TABLE `foto` (
-  `foto_PK` int(11) NOT NULL,
+  `cod_foto` int(11) NOT NULL,
   `cod_produto` int(11) DEFAULT NULL,
   `foto` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -121,7 +122,7 @@ CREATE TABLE `foto` (
 -- Despejando dados para a tabela `foto`
 --
 
-INSERT INTO `foto` (`foto_PK`, `cod_produto`, `foto`) VALUES
+INSERT INTO `foto` (`cod_foto`, `cod_produto`, `foto`) VALUES
 (1, 3, 'img/produtos/1779643022_3_download.jpg'),
 (2, 4, 'img/produtos/1781033502_4_santa_ceia_entalhada.webp');
 
@@ -245,7 +246,7 @@ ALTER TABLE `endereco`
 -- Índices de tabela `foto`
 --
 ALTER TABLE `foto`
-  ADD PRIMARY KEY (`foto_PK`),
+  ADD PRIMARY KEY (`cod_foto`),
   ADD KEY `cod_produto` (`cod_produto`);
 
 --
@@ -304,7 +305,7 @@ ALTER TABLE `endereco`
 -- AUTO_INCREMENT de tabela `foto`
 --
 ALTER TABLE `foto`
-  MODIFY `foto_PK` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cod_foto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `logistica`
