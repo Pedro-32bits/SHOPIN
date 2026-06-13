@@ -1,7 +1,8 @@
 <?php
 
 session_start();
-if (empty($_SESSION['tipo']) || $_SESSION['tipo'] !== 'vendedor') {
+
+if (!isset($_SESSION['tipo']) || $_SESSION['tipo']  !== 'vendedor') {
     header("Location: loginVend.php");
     exit();
 }
@@ -23,19 +24,17 @@ $totalProdutos = count($produtos);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SHOPIN A - Painel do Vendedor</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
 <body class="bg-[#E6DED3] min-h-screen">
 
-    <?php include "../UI/NAVBAR.php"; ?>
 
-    <!-- CONTAINER -->
+
     <div class="container mx-auto px-4 py-10">
 
-        <!-- TOPO -->
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 border-b-4 border-[#A30F06] pb-4">
 
             <div>
@@ -48,14 +47,12 @@ $totalProdutos = count($produtos);
                 </p>
             </div>
 
-            <!-- BOTÃO -->
             <button
-                onclick="abrirModal()" class="mt-4 md:mt-0 bg-[#A30F06] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#7d0b04] transition flex items-center shadow-xl"> <i class="fas fa-plus-circle mr-3"></i> ADICIONAR PRODUTO
+                onclick="abrirModalInserir()" class="mt-4 md:mt-0 bg-[#A30F06] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#7d0b04] transition flex items-center shadow-xl cursor-pointer"> <i class="fas fa-plus-circle mr-3"></i> ADICIONAR PRODUTO
             </button>
 
         </div>
 
-        <!-- TABELA -->
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
 
             <table class="w-full">
@@ -118,13 +115,32 @@ $totalProdutos = count($produtos);
 
                                 <td class="p-5">
                                     <div class="flex justify-center gap-3">
-                                        <button class="bg-blue-100 text-blue-600 w-11 h-11 rounded-xl hover:scale-105 transition" >
+                                        
+                                        <button type="button" 
+                                                onclick="abrirModalEditar(this)"
+                                                data-cod="<?php echo $produto['cod_produto']; ?>"
+                                                data-nome="<?php echo htmlspecialchars($produto['nome'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                data-marca="<?php echo htmlspecialchars($produto['marca'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                data-estoque="<?php echo $produto['estoque']; ?>"
+                                                
+                                                data-descricao="<?php echo htmlspecialchars($produto['descricao'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                data-valor="<?php echo $produto['valor']; ?>"
+                                                data-promocao="<?php echo $produto['promocao']; ?>"
+                                                data-categoria="<?php echo $produto['cod_categoria']; ?>"
+                                                class="bg-blue-100 text-blue-600 w-11 h-11 rounded-xl hover:scale-105 transition flex items-center justify-center cursor-pointer" 
+                                                title="Editar Produto">
                                             <i class="fas fa-edit"></i>
                                         </button>
 
-                                        <button class="bg-red-100 text-red-600 w-11 h-11 rounded-xl hover:scale-105 transition" >
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <form action="../../BACKEND/PDO/CONTROLLER/ProdutoController.php" method="POST" class="inline m-0" onsubmit="return confirm('Tem certeza absoluta que deseja apagar este produto?');">
+                                            <input type="hidden" name="acao" value="Apagar">
+                                            <input type="hidden" name="cod_produto" value="<?php echo $produto['cod_produto']; ?>">
+                                            
+                                            <button type="submit" class="bg-red-100 text-red-600 w-11 h-11 rounded-xl hover:scale-105 transition flex items-center justify-center cursor-pointer" title="Excluir Produto">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+
                                     </div>
                                 </td>
                             </tr>
@@ -142,7 +158,6 @@ $totalProdutos = count($produtos);
 
         </div>
 
-        <!-- CARDS -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
 
             <div class="bg-white rounded-3xl p-6 shadow-xl border-l-[6px] border-yellow-500">
@@ -185,141 +200,66 @@ $totalProdutos = count($produtos);
 
     </div>
 
-    <!-- MODAL -->
-    <div
-        id="modalProduto"
-        class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div id="modalProduto" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 
-        <!-- CARD -->
         <div class="bg-[#E6DED3] w-full max-w-lg rounded-[28px] shadow-2xl overflow-hidden animate-modal overflow-y-auto" style="max-height: calc(100vh - 4rem);">
 
-            <!-- TOPO -->
             <div class="bg-[#A30F06] px-6 py-5 flex items-center justify-between">
 
                 <div>
-                    <h2 class="text-xl font-black text-white uppercase">
+                    <h2 id="modal_titulo" class="text-xl font-black text-white uppercase">
                         Novo Produto
                     </h2>
 
                     <p class="text-red-100 text-xs mt-1">
-                        Cadastre rapidamente
+                        Preencha os dados do produto
                     </p>
                 </div>
 
-                <!-- FECHAR -->
-                <button
-                    onclick="fecharModal()"
-                    class="text-white text-2xl">
+                <button onclick="fecharModal()" class="text-white text-2xl cursor-pointer">
                     ✕
                 </button>
 
             </div>
 
-            <!-- FORM -->
-            <form
-                action="../../BACKEND/PDO/CONTROLLER/ProdutoController.php"
-                method="POST"
-                enctype="multipart/form-data"
-                class="p-6 space-y-4">
+            <form action="../../BACKEND/PDO/CONTROLLER/ProdutoController.php" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
 
-                <input type="hidden" name="acao" value="Inserir">
+                <input type="hidden" name="acao" id="modal_acao" value="Inserir">
+                <input type="hidden" name="cod_produto" id="modal_cod_produto" value="">
 
-                <!-- NOME -->
                 <div>
-
-                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">
-                        Nome
-                    </label>
-
-                    <input
-                        type="text"
-                        name="nome"
-                        required
-                        placeholder="Nome do produto"
-                        class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
-
+                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">Nome</label>
+                    <input type="text" name="nome" id="modal_nome" required placeholder="Nome do produto" class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
                 </div>
 
-                <!-- MARCA -->
                 <div>
-
-                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">
-                        Marca
-                    </label>
-
-                    <input
-                        type="text"
-                        name="marca"
-                        required
-                        placeholder="Marca do produto"
-                        class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
-
+                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">Marca</label>
+                    <input type="text" name="marca" id="modal_marca" placeholder="Marca do produto" class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
                 </div>
 
-                <!-- ESTOQUE -->
                 <div>
-
-                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">
-                        Estoque
-                    </label>
-
-                    <input
-                        type="number"
-                        name="estoque"
-                        required
-                        placeholder="Quantidade em estoque"
-                        class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
-
+                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">Estoque</label>
+                    <input type="number" name="estoque" id="modal_estoque" required placeholder="Quantidade em estoque" class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
                 </div>
 
-                <!-- DESCRIÇÃO -->
                 <div>
-
-                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">
-                        Descrição
-                    </label>
-
-                    <textarea
-                        name="descricao"
-                        rows="3"
-                        placeholder="Descrição do produto"
-                        class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none resize-none focus:border-[#A30F06]"></textarea>
-
+                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">Descrição</label>
+                    <textarea name="descricao" id="modal_descricao" rows="3" placeholder="Descrição do produto" class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none resize-none focus:border-[#A30F06]"></textarea>
                 </div>
 
-                <!-- VALOR -->
                 <div>
-
-                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">
-                        Valor
-                    </label>
-
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="valor"
-                        required
-                        placeholder="R$ 0,00"
-                        class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
-
+                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">Valor</label>
+                    <input type="number" step="0.01" name="valor" id="modal_valor" required placeholder="R$ 0,00" class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
                 </div>
 
-                <!-- PROMOÇÃO -->
                 <div>
-
-                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">
-                        Promoção
-                    </label>
-
-                    <input type="number" step="0.01" name="promocao" placeholder="Preço promocional" class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
+                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">Promoção</label>
+                    <input type="number" step="0.01" name="promocao" id="modal_promocao" placeholder="Preço promocional" class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
                 </div>
 
-                <!-- CATEGORIA -->
                 <div>
-                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">
-                        Categoria
-                    </label>
-                    <select name="cod_categoria" required class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
+                    <label class="block text-xs font-black uppercase text-[#A30F06] mb-2">Categoria</label>
+                    <select name="cod_categoria" id="modal_categoria" required class="w-full bg-white border-2 border-[#d8c8b8] rounded-2xl px-4 py-3 outline-none focus:border-[#A30F06]">
                         <option value="">Selecione a categoria</option>
                         <?php foreach ($categorias as $categoria): ?>
                             <option value="<?php echo htmlspecialchars($categoria['cod_categoria']); ?>">
@@ -329,11 +269,9 @@ $totalProdutos = count($produtos);
                     </select>
                 </div>
 
-                <!-- FOTO -->
                 <div>
                     <label class="block text-xs font-black uppercase text-[#A30F06] mb-3"> 📸 Adicionar Fotos do Produto </label>
 
-                    <!-- Área de Upload -->
                     <div id="uploadArea" class="border-3 dashed border-[#A30F06] rounded-2xl p-8 text-center cursor-pointer bg-gradient-to-b from-white to-[#fef5f0] transition hover:bg-[#fff5f0]" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="document.getElementById('photoInput').click()">
                         <div class="text-4xl mb-2">🖼️</div>
                         <p class="text-[#A30F06] font-bold">Clique para escolher ou arraste fotos</p>
@@ -342,20 +280,16 @@ $totalProdutos = count($produtos);
 
                     <input type="file" id="photoInput" name="fotos[]" multiple accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
 
-                    <!-- Preview de Fotos -->
                     <div id="photoPreview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4"></div>
                 </div>
 
-                <!-- BOTÕES -->
                 <div class="grid grid-cols-2 gap-3 pt-2">
 
-                    <button type="button" onclick="fecharModal()" class="border-2 border-[#A30F06] text-[#A30F06] py-3 rounded-2xl font-black hover:bg-[#A30F06] hover:text-white transition">
+                    <button type="button" onclick="fecharModal()" class="border-2 border-[#A30F06] text-[#A30F06] py-3 rounded-2xl font-black hover:bg-[#A30F06] hover:text-white transition cursor-pointer">
                         Cancelar
                     </button>
 
-                    <button
-                        type="submit"
-                        class="bg-[#A30F06] text-white py-3 rounded-2xl font-black hover:bg-[#7d0b04] transition">
+                    <button type="submit" class="bg-[#A30F06] text-white py-3 rounded-2xl font-black hover:bg-[#7d0b04] transition cursor-pointer">
                         Salvar
                     </button>
 
@@ -369,11 +303,42 @@ $totalProdutos = count($produtos);
 
     <?php include "../UI/FOOTER.php"; ?>
 
-    <!-- SCRIPT -->
     <script>
         let selectedFiles = [];
 
-        function abrirModal() {
+        // --- NOVAS FUNÇÕES PARA O MODAL ---
+        
+        function abrirModalInserir() {
+            document.getElementById('modal_titulo').innerText = "Novo Produto";
+            document.getElementById('modal_acao').value = "Inserir";
+            document.getElementById('modal_cod_produto').value = "";
+            
+            // Limpa todos os campos
+            document.getElementById('modal_nome').value = "";
+            document.getElementById('modal_marca').value = "";
+            document.getElementById('modal_estoque').value = "";
+            document.getElementById('modal_descricao').value = "";
+            document.getElementById('modal_valor').value = "";
+            document.getElementById('modal_promocao').value = "";
+            document.getElementById('modal_categoria').value = "";
+
+            document.getElementById('modalProduto').classList.remove('hidden');
+        }
+
+        function abrirModalEditar(botao) {
+            document.getElementById('modal_titulo').innerText = "Editar Produto";
+            document.getElementById('modal_acao').value = "atualizar"; 
+            
+            // Puxa os dados dos atributos data-* do botão
+            document.getElementById('modal_cod_produto').value = botao.getAttribute('data-cod');
+            document.getElementById('modal_nome').value = botao.getAttribute('data-nome');
+            document.getElementById('modal_marca').value = botao.getAttribute('data-marca');
+            document.getElementById('modal_estoque').value = botao.getAttribute('data-estoque');
+            document.getElementById('modal_descricao').value = botao.getAttribute('data-descricao');
+            document.getElementById('modal_valor').value = botao.getAttribute('data-valor');
+            document.getElementById('modal_promocao').value = botao.getAttribute('data-promocao');
+            document.getElementById('modal_categoria').value = botao.getAttribute('data-categoria');
+
             document.getElementById('modalProduto').classList.remove('hidden');
         }
 
@@ -383,6 +348,8 @@ $totalProdutos = count($produtos);
             document.getElementById('photoPreview').innerHTML = '';
             document.getElementById('photoInput').value = '';
         }
+
+        // --- FUNÇÕES DE UPLOAD DE FOTOS MANTIDAS ---
 
         function handleDragOver(e) {
             e.preventDefault();
@@ -408,10 +375,8 @@ $totalProdutos = count($produtos);
         }
 
         function handleFiles(files) {
-            // ACUMULA os arquivos novos em vez de substituir os anteriores
             Array.from(files).forEach(file => {
                 if (!file.type.startsWith('image/')) return;
-                // Evita duplicatas pelo nome+tamanho
                 const duplicado = selectedFiles.some(f => f.name === file.name && f.size === file.size);
                 if (!duplicado) selectedFiles.push(file);
             });
@@ -419,7 +384,6 @@ $totalProdutos = count($produtos);
         }
 
         function syncInputEPreview() {
-            // Sincroniza o input file com o array selectedFiles
             const dataTransfer = new DataTransfer();
             selectedFiles.forEach(file => dataTransfer.items.add(file));
             document.getElementById('photoInput').files = dataTransfer.files;
@@ -437,7 +401,7 @@ $totalProdutos = count($produtos);
                     div.className = 'relative bg-white rounded-xl overflow-hidden shadow-md';
                     div.innerHTML = `
                         <img src="${e.target.result}" class="w-full h-32 object-cover">
-                        <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-700 transition" onclick="removerFoto(${index})">×</button>
+                        <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-700 transition cursor-pointer" onclick="removerFoto(${index})">×</button>
                         <p class="text-xs p-1 text-gray-600 truncate">${file.name}</p>
                     `;
                     preview.appendChild(div);
@@ -452,7 +416,6 @@ $totalProdutos = count($produtos);
         }
     </script>
 
-    <!-- ANIMAÇÃO -->
     <style>
         @keyframes modal {
 

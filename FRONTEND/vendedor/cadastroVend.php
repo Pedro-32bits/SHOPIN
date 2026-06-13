@@ -35,14 +35,8 @@
 
             <label class="auth-label">Confirmar Senha:</label>
             <input type="password" name="confirmar_senha" class="auth-input" placeholder="Confirme sua senha" required>
-
-            <label class="auth-label">Telefone:</label>
-            <input type="text" name="telefone" id="telefone" class="auth-input mask-phone" placeholder="(00)00000-0000" required>
-
-            <label class="auth-label">CPF:</label>
-            <input type="text" name="CPF" id="cpf" class="auth-input mask-cpf" placeholder="000.000.000-00" required maxlength="14">
-
             <input type="hidden" name="tipo" value="vendedor">
+
             <div class="auth-botoes">
                 <button type="submit" name="acao" value="tornarVendedor" class="auth-btn auth-btn-submit">Cadastrar</button>
                 <button type="reset" class="auth-btn auth-btn-reset">Limpar</button>

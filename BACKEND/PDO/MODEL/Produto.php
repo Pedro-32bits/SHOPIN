@@ -21,6 +21,7 @@ class Produto {
     private $descricao;
     private $valor;
     private $promocao;
+    private $estoque;
 
     public function getCod_produto() {
         return $this->cod_produto;
@@ -78,5 +79,13 @@ class Produto {
     public function setPromocao($value) {
         $this->promocao = $value;
     }
+
+    public function getEstoque(){
+        return $this -> estoque;
+    }
+    public function setEstoque($value){
+        $this -> estoque = $value;
+    }
+
 }
 ?>

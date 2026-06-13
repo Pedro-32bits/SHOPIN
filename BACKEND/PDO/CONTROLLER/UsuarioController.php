@@ -25,12 +25,14 @@ switch ($acao) {
             $_SESSION['cod_usuario'] = $resultado['cod_usuario'];
             $_SESSION['email'] = $resultado['email'];
             $_SESSION['senha'] = $resultado['senha'];
-            $_SESSION['tipo'] = $resultado['tipo'] ?? 'cliente';
+            $_SESSION['tipo'] = $resultado['tipo'];
 
-            if($_SESSION['tipo']=== 'cliente'){
+            if($_SESSION['tipo'] === 'cliente'){
+
                 header("location: ../../../FRONTEND/cliente/usuario.php");
+
             }else{
-                header("location ../../../FRONTEND/vendedor/vendedor.php");
+                header("location: ../../../FRONTEND/vendedor/vendedor.php");
                 }
             
         }else  {

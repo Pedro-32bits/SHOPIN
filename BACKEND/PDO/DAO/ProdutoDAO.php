@@ -5,7 +5,7 @@
         function inserir ($produto){
 
             include __DIR__ . "/../conexao.php";
-            $sql = "INSERT INTO produto (cod_usuario, cod_categoria, nome, marca, descricao, valor, promocao) VALUES (:cod_usuario, :cod_categoria, :nome, :marca, :descricao, :valor, :promocao)";
+            $sql = "INSERT INTO produto (cod_usuario, cod_categoria, nome, marca, descricao, valor, promocao, estoque) VALUES (:cod_usuario, :cod_categoria, :nome, :marca, :descricao, :valor, :promocao, :estoque)";
             $consulta = $conexao->prepare($sql); 
             $consulta->bindValue(":cod_usuario", $produto->getCodUsuario());
             $consulta->bindValue(":cod_categoria", $produto->getCod_categoria());
@@ -14,6 +14,7 @@
             $consulta->bindValue(":descricao", $produto->getDescricao());
             $consulta->bindValue(":valor", $produto->getValor());
             $consulta->bindValue(":promocao", $produto->getPromocao());
+            $consulta->bindValue(":estoque", $estoque-> getEstoque());
          
             if($consulta->execute()){
                 return $conexao->lastInsertId();
@@ -62,7 +63,7 @@
                 // UPDATE - ATUALIZAR
         function atualizar($produto){
             include __DIR__ . "/../conexao.php";
-            $sql = "UPDATE produto SET nome=:nome, marca=:marca, descricao=:descricao, valor=:valor, promocao=:promocao WHERE cod_produto = :cod_produto";
+            $sql = "UPDATE produto SET nome=:nome, marca=:marca, descricao=:descricao, valor=:valor, promocao=:promocao, estoque=:estoque WHERE cod_produto = :cod_produto" ;
             $consulta = $conexao->prepare($sql);
             $consulta->bindValue(":cod_produto", $produto->getCod_produto());
             $consulta->bindValue(":nome", $produto->getNome());
@@ -70,6 +71,7 @@
             $consulta->bindValue(":descricao", $produto->getDescricao());
             $consulta->bindValue(":valor", $produto->getValor());
             $consulta->bindValue(":promocao", $produto->getPromocao());
+            $consulta->bindValue(":estoque", $produto-> getEstoque());
         
             if($consulta->execute()){
                 return true;
@@ -91,17 +93,7 @@
                 return false;
            }
         }
-
-        function logar($email,$senha){
-            include __DIR__ . "/../conexao.php";
-            $sql = "SELECT * FROM produto WHERE (email =:email) AND (senha=:senha)";
-            $consulta = $conexao->prepare($sql);
-            $consulta->bindValue(":email", $email);
-            $consulta->bindValue(":senha", $senha);
-            $consulta->execute();
-            return $consulta->fetch();
-        }
-    
+  
         function buscar($pesquisa){
             include __DIR__ . "/../conexao.php";
             $sql = "SELECT * FROM produto WHERE nome LIKE :pesquisa";

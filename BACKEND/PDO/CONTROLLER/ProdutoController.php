@@ -24,7 +24,8 @@ $marca = isset($_POST['marca']) ? $_POST['marca'] : "";
 $descricao = isset($_POST['descricao']) ? $_POST['descricao'] : "";
 $valor = isset($_POST['valor']) ? $_POST['valor'] : "";
 $promocao = isset($_POST['promocao']) ? $_POST['promocao'] : "";
-
+$estoque = isset ($_POST['estoque']) ? $_POST['estoque'] : "";
+ 
 switch ($acao) {
     case "Inserir":
         if (empty($cod_usuario)) {
@@ -38,6 +39,7 @@ switch ($acao) {
         $produto->setDescricao($descricao);
         $produto->setValor($valor);
         $produto->setPromocao($promocao);
+        $produto->setEstoque($estoque);
         $produtoId = $dao->inserir($produto);
         if ($produtoId !== false) {
             if (isset($_FILES['fotos']) && !empty($_FILES['fotos']['name'][0])) {
@@ -91,19 +93,20 @@ switch ($acao) {
         $produto->setDescricao($descricao);
         $produto->setValor($valor);
         $produto->setPromocao($promocao);
+        $produto->setEstoque($estoque);
 
         if ($dao->atualizar($produto)) {
-            header("location: ../../../FRONTEND/vendedor/cadastro.php");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php");
         } else {
-            header("location: ../../../FRONTEND/vendedor/cadastro.php?erro=3");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php?erro=3");
         }
         break;
 
     case "Apagar":
         if ($dao->apagar($cod_produto)) {
-            header("location: ../../../FRONTEND/vendedor/cadastroProduto.php");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php");
         } else {
-            header("location: ../../../FRONTEND/vendedor/cadastroProduto.php? erro=2");
+            header("location: ../../../FRONTEND/vendedor/vendedor.php? erro=2");
         }
         break;
 

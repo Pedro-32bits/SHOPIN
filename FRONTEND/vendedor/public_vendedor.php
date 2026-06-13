@@ -1,28 +1,28 @@
 <?php
-require __DIR__ . "/../../BACKEND/PDO/DAO/VendedorDAO.php";
+require __DIR__ . "/../../BACKEND/PDO/DAO/UsuarioDAO.php";
 require __DIR__ . "/../../BACKEND/PDO/DAO/ProdutoDAO.php";
 
 $cod = isset($_GET['cod']) ? intval($_GET['cod']) : 0;
-$vDao = new VendedorDAO();
+$vDao = new usuarioDAO();
 $pDao = new ProdutoDAO();
 
-$vendedor = null;
+$usuario  = null;
 $produtos = [];
 if ($cod) {
-    // buscar vendedor simples via listar e filtrar
+    // buscar usuario  simples via listar e filtrar
     $lista = $vDao->listar();
     foreach ($lista as $v) {
-        if (isset($v['cod_vendedor']) && $v['cod_vendedor'] == $cod) {
-            $vendedor = $v;
+        if (isset($v['cod_usuario']) && $v['cod_usuario'] == $cod) {
+            $usuario  = $v;
             break;
         }
-        if (!isset($v['cod_vendedor']) && isset($v['cod']) && $v['cod'] == $cod) {
+        if (!isset($v['cod_usuario']) && isset($v['cod']) && $v['cod'] == $cod) {
             // fallback caso a linha ainda use 'cod' como chave
-            $vendedor = $v;
+            $usuario  = $v;
             break;
         }
     }
-    $produtos = $pDao->listarPorVendedor($cod);
+    $produtos = $pDao->listarPorUsuario ($cod);
 }
 ?>
 <!DOCTYPE html>
@@ -30,18 +30,18 @@ if ($cod) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Vendedor</title>
+    <title>Usuario </title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#E6DED3]">
     <?php include __DIR__ . "/../UI/NAVBAR.php"; ?>
     <main class="container mx-auto p-6">
-        <?php if (!$vendedor): ?>
-            <div class="bg-white p-6 rounded">Vendedor não encontrado.</div>
+        <?php if (!$usuario ): ?>
+            <div class="bg-white p-6 rounded">Usuario  não encontrado.</div>
         <?php else: ?>
             <div class="bg-white p-6 rounded mb-6">
-                <h2 class="text-2xl font-bold"><?php echo htmlspecialchars($vendedor['nome']); ?></h2>
-                <p><?php echo htmlspecialchars($vendedor['email']); ?></p>
+                <h2 class="text-2xl font-bold"><?php echo htmlspecialchars($usuario ['nome']); ?></h2>
+                <p><?php echo htmlspecialchars($usuario ['email']); ?></p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

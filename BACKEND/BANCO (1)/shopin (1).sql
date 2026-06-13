@@ -186,6 +186,7 @@ CREATE TABLE `produto` (
   `descricao` varchar(500) DEFAULT NULL,
   `valor` decimal(10,2) DEFAULT NULL,
   `promocao` decimal(10,2) DEFAULT NULL
+  `vendido` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
