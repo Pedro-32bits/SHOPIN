@@ -53,7 +53,7 @@
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .product-image-container {
@@ -74,10 +74,10 @@
 
     <?php
     require __DIR__ . "/../BACKEND/PDO/DAO/ProdutoDAO.php";
-    
-    $pesquisa = isset($_GET['pesquisa']) ? trim($_GET['pesquisa']) : '';
     $produtoDao = new ProdutoDAO();
-    
+    $produtos = $produtoDao->listarComFotos();
+    $pesquisa = isset($_GET['pesquisa']) ? trim($_GET['pesquisa']) : '';
+
     $produtos = [];
     if (!empty($pesquisa)) {
         $produtos = $produtoDao->buscar($pesquisa);
@@ -100,52 +100,32 @@
         </div>
 
         <!-- GRID DE PRODUTOS -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            <?php if (!empty($produtos)): ?>
+        <main class="container mx-auto px-4 my-12">
+            <h2 class="font-pagkaki text-5xl text-shopin-red mb-8  border-shopin-redpl-4">Achados Arretados</h2>
+
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
                 <?php foreach ($produtos as $p): ?>
                     <?php $foto = !empty($p['foto']) ? $p['foto'] : 'img/placeholder.php'; ?>
                     <a href="produto.php?cod=<?php echo $p['cod_produto']; ?>" class="product-card text-white block no-underline hover:no-underline">
-                        <div class="product-image-container mb-3">
-                            <img src="<?php echo htmlspecialchars($foto); ?>" class="h-4/5 object-contain" onerror="this.src='img/placeholder.php'">
-                        </div>
-                        <h3 class="text-[14px] uppercase font-bold leading-tight h-8">
-                            <?php echo htmlspecialchars($p['nome']); ?>
-                        </h3>
+                        <div class="product-image-container mb-3"><img src="<?php echo htmlspecialchars($foto); ?>" class="h-4/5 object-contain" onerror="this.src='img/placeholder.php'"></div>
+                        <h3 class="text-[14px] uppercase font-bold leading-tight h-8"><?php echo htmlspecialchars($p['nome']); ?></h3>
                         <?php if (!empty($p['promocao']) && $p['promocao'] > 0): ?>
-                            <p class="text-[10px] opacity-60 line-through mt-2">
-                                R$<?php echo number_format($p['valor'],2,',','.'); ?>
-                            </p>
-                            <p class="font-cordel text-2xl">
-                                R$<?php echo number_format($p['promocao'],2,',','.'); ?>
-                            </p>
+                            <p class="text-[10px] opacity-60 line-through mt-2">R$<?php echo number_format($p['valor'], 2, ',', '.'); ?></p>
+                            <p class="font-cordel text-2xl">R$<?php echo number_format($p['promocao'], 2, ',', '.'); ?></p>
+
                         <?php else: ?>
+
                             <p class="text-[10px] opacity-0 mt-2">spacer</p>
-                            <p class="font-cordel text-2xl">
-                                R$<?php echo number_format($p['valor'],2,',','.'); ?>
-                            </p>
+                            <p class="font-cordel text-2xl">R$<?php echo number_format($p['valor'], 2, ',', '.'); ?></p>
                         <?php endif; ?>
                     </a>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <div class="col-span-full bg-white p-8 rounded-lg text-center">
-                    <i class="fas fa-search text-gray-300 text-6xl mb-4 block"></i>
-                    <p class="text-gray-500 text-lg">
-                        <?php if (!empty($pesquisa)): ?>
-                            Nenhum produto encontrado para "<?php echo htmlspecialchars($pesquisa); ?>"
-                        <?php else: ?>
-                            Nenhum resultado para exibir
-                        <?php endif; ?>
-                    </p>
-                </div>
-            <?php endif; ?>
-        </div>
 
-        <!-- BOTÃO VOLTAR -->
-        <div class="mt-12 text-center">
-            <a href="index.php" class="inline-block bg-shopin-red text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition">
-                <i class="fas fa-arrow-left mr-2"></i>Voltar para a página inicial
-            </a>
-        </div>
+            </div>
+        </main>
+
     </main>
 
     <?php include "UI/footer.php"; ?>

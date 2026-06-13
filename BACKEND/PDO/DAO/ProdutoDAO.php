@@ -14,7 +14,7 @@
             $consulta->bindValue(":descricao", $produto->getDescricao());
             $consulta->bindValue(":valor", $produto->getValor());
             $consulta->bindValue(":promocao", $produto->getPromocao());
-            $consulta->bindValue(":estoque", $estoque-> getEstoque());
+            $consulta->bindValue(":estoque", $produto-> getEstoque());
          
             if($consulta->execute()){
                 return $conexao->lastInsertId();

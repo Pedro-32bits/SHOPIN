@@ -181,7 +181,7 @@ if (isset($_GET['erro'])) {
                                 $total += $subtotal;
                             ?>
                                 <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg" data-produto-id="<?php echo $item['cod_produto']; ?>">
-                                    <img src="<?php echo $item['foto']; ?>" alt="<?php echo $item['nome']; ?>" class="w-20 h-20 object-cover rounded">
+                                    <img src="../<?php echo $item['foto']; ?>" alt="<?php echo $item['nome']; ?>" class="w-20 h-20 object-cover rounded">
                                     <div class="flex-1">
                                         <h4 class="font-bold text-gray-800"><?php echo htmlspecialchars($item['nome']); ?></h4>
                                         <p class="text-sm text-gray-500"><?php echo htmlspecialchars($item['marca']); ?></p>

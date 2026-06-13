@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ob_start();
-?>
+
 
 <head>
     <meta charset="UTF-8">
