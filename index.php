@@ -1,3 +1,7 @@
+ <?php
+    header("Location: loginVend.php");
+ ?>
+ 
  ☭ Guitarra Elétrica "Red Moon"
 
 A única guitarra capaz de derrubar regimes, amizades e a afinação da banda ao mesmo tempo.**

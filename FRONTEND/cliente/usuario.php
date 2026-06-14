@@ -17,10 +17,13 @@ $carrinho = $_SESSION['carrinho'] ?? array();
 
 // 3. Chamar o Buscador de Endereço (DAO) 🗺️
 require_once __DIR__ . "/../../BACKEND/PDO/DAO/EnderecoDAO.php";
+require_once __DIR__ . "/../../BACKEND/PDO/DAO/PedidoDAO.php";
 $enderecoDao = new EnderecoDAO();
+$pedidoDao = new PedidoDAO();
 
 // 4. CORREÇÃO AQUI: Passar o $cod_usuario (que é um número) e NÃO o $enderecoDao!
 $meuEndereco = $enderecoDao->buscarPorCliente($cod_usuario);
+$pedidos = $pedidoDao->buscarPorUsuario($cod_usuario);
 
 // Mensagens de alerta
 $msg = "";
@@ -170,6 +173,39 @@ if (isset($_GET['erro'])) {
                     </div>
                 </div>
 
+                <!-- PEDIDOS -->
+                <div id="pedidos" class="bg-white rounded-2xl shadow-sm p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-pagkaki text-3xl text-[#A30F06]">Meus Pedidos</h3>
+                        <span class="text-sm font-bold text-gray-600"><?php echo count($pedidos); ?> pedido(s)</span>
+                    </div>
+
+                    <?php if (empty($pedidos)): ?>
+                        <div class="text-center py-12">
+                            <i class="fas fa-shopping-bag text-gray-300 text-6xl mb-4"></i>
+                            <p class="text-gray-500 font-medium">Voce ainda nao fez nenhum pedido</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="space-y-4">
+                            <?php foreach ($pedidos as $pedido): ?>
+                                <div class="border border-gray-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                    <div>
+                                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Pedido</p>
+                                        <h4 class="font-bold text-[#A30F06]"><?php echo htmlspecialchars($pedido['cod_pedido']); ?></h4>
+                                        <p class="text-sm text-gray-500">
+                                            <?php echo (int) $pedido['total_itens']; ?> item(ns) - <?php echo htmlspecialchars($pedido['formaPag'] ?? 'Pagamento simulado'); ?>
+                                        </p>
+                                    </div>
+                                    <div class="text-left md:text-right">
+                                        <p class="font-pagkaki text-2xl text-[#A30F06]">R$ <?php echo number_format((float) $pedido['preco'], 2, ',', '.'); ?></p>
+                                        <a href="pedido.php?cod=<?php echo urlencode($pedido['cod_pedido']); ?>" class="inline-block mt-2 text-sm font-bold text-blue-600 hover:underline">Ver detalhes</a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
                 <!-- CARRINHO -->
                 <div id="carrinho" class="bg-white rounded-2xl shadow-sm p-8">
                     <div class="flex justify-between items-center mb-6">
@@ -214,7 +250,7 @@ if (isset($_GET['erro'])) {
                                 <span class="text-lg font-bold">Total:</span>
                                 <span class="font-pagkaki text-2xl text-[#A30F06]">R$ <?php echo number_format($total, 2, ',', '.'); ?></span>
                             </div>
-                            <button class="w-full bg-[#A30F06] text-white py-3 rounded-lg font-bold hover:bg-red-700">Prosseguir para Pagamento</button>
+                            <a href="../pagamento.php" class="block text-center w-full bg-[#A30F06] text-white py-3 rounded-lg font-bold hover:bg-red-700">Prosseguir para Pagamento</a>
                         </div>
                     <?php endif; ?>
                 </div>

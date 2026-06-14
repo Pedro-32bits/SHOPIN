@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 10/06/2026 às 15:10
+-- Tempo de geração: 15/06/2026 às 01:57
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -88,7 +88,6 @@ INSERT INTO `categoria` (`cod_categoria`, `nome`) VALUES
 (49, 'Móveis de Escritório'),
 (50, 'Segurança Residencial'),
 (51, 'Smart Home e Automação');
-(52, 'decoração');
 
 -- --------------------------------------------------------
 
@@ -105,6 +104,14 @@ CREATE TABLE `endereco` (
   `ponto_referencia` varchar(100) DEFAULT NULL,
   `num_casa` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `endereco`
+--
+
+INSERT INTO `endereco` (`cod_endereco`, `cod_usuario`, `CEP`, `rua`, `bairro`, `ponto_referencia`, `num_casa`) VALUES
+(1, 100, '11111-11', 'Maria de Lourde Terceiro Chagas', '2 de agosto', 'proxima ao presidio ', '716'),
+(2, 6, '11111-111', 'bobos', 'balão magico', 'EU ', '0');
 
 -- --------------------------------------------------------
 
@@ -123,8 +130,8 @@ CREATE TABLE `foto` (
 --
 
 INSERT INTO `foto` (`cod_foto`, `cod_produto`, `foto`) VALUES
-(1, 3, 'img/produtos/1779643022_3_download.jpg'),
-(2, 4, 'img/produtos/1781033502_4_santa_ceia_entalhada.webp');
+(2, 5, 'img/produtos/1781234842_5_download__2_.jpg'),
+(3, 6, 'img/produtos/1781318368_6_1779643022_3_download.jpg');
 
 -- --------------------------------------------------------
 
@@ -157,6 +164,13 @@ CREATE TABLE `pedido` (
   `notaF` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `pedido`
+--
+
+INSERT INTO `pedido` (`cod_pedido`, `cod_usuario`, `formaPag`, `preco`, `cupom`, `validacao`, `notaF`) VALUES
+('PED20260614234636650', 100, 'Boleto', 1079.99, NULL, 1, 'NF-PED20260614234636650');
+
 -- --------------------------------------------------------
 
 --
@@ -171,6 +185,13 @@ CREATE TABLE `possui` (
   `resenha` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `possui`
+--
+
+INSERT INTO `possui` (`cod_pedido`, `cod_produto`, `qnt`, `avaliacao`, `resenha`) VALUES
+('PED20260614234636650', 5, 1, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -179,25 +200,24 @@ CREATE TABLE `possui` (
 
 CREATE TABLE `produto` (
   `cod_produto` int(11) NOT NULL,
-  `cod_categoria` int(11) DEFAULT NULL,
   `cod_usuario` int(11) DEFAULT NULL,
+  `cod_categoria` int(11) DEFAULT NULL,
   `nome` varchar(100) DEFAULT NULL,
   `marca` varchar(50) DEFAULT NULL,
   `descricao` varchar(500) DEFAULT NULL,
   `valor` decimal(10,2) DEFAULT NULL,
-  `promocao` decimal(10,2) DEFAULT NULL
-  `vendido` int(11) DEFAULT NULL
+  `promocao` decimal(10,2) DEFAULT NULL,
+  `estoque` int(11) NOT NULL,
+  `vendidos` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `produto`
 --
 
-INSERT INTO `produto` (`cod_produto`, `cod_categoria`, `cod_usuario`, `nome`, `marca`, `descricao`, `valor`, `promocao`) VALUES
-(3, 1, NULL, 'guitarra comunista', 'fell good inc ', 'a guitarra perfeita para professores de humanas ', 1922.00, 22.00),
-(4, 49, 1, 'quadro santa ceia', 'madeira', 'quadro da ultima ceia de jejus com os apóstolos esculpido na madeira ', 10000.00, 0.00),
-(5, 1, 2, 'Aipad-16A', 'apple', 'Processador: Apple A16 BionicTela: Liquid Retina Multi-Touch de 10,86 polegadas (2360 x 1640 pixels, 264 dpi)Armazenamento: Opções de 128 GB, 256 GB e 512 GBCâmeras: Traseira de 12 MP (4K) e frontal Center Stage de 12 MPConectividade: Wi-Fi 6 e versões Wi-Fi + CellularBateria: Duração para o dia todo (porta USB-C)', 4000.00, 3892.99),
-(6, 41, 2, 'galinha', 'plastico', 'muito chique ', 10000.00, 1.99);
+INSERT INTO `produto` (`cod_produto`, `cod_usuario`, `cod_categoria`, `nome`, `marca`, `descricao`, `valor`, `promocao`, `estoque`, `vendidos`) VALUES
+(5, 6, 20, 'guitarra peixe', 'fell good inc ', 'guitarra em formato de peixe', 1200.00, 1079.99, 0, 1),
+(6, 6, 20, 'Red Moon', 'fell good inc', 'A única guitarra capaz de derrubar regimes, amizades e a afinação da banda ao mesmo tempo.\r\n\r\nCansado de guitarras comuns que apenas fazem música? Apresentamos a Red Moon, uma obra-prima inspirada em uma certa ferramenta agrícola historicamente associada a revoluções e conversas extremamente desconfortáveis em aulas de história.', 2000.00, 1990.99, 67, 0);
 
 -- --------------------------------------------------------
 
@@ -213,18 +233,20 @@ CREATE TABLE `usuario` (
   `telefone` varchar(20) DEFAULT NULL,
   `cpf` varchar(14) DEFAULT NULL,
   `cnpj` varchar(18) DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
   `tipo` varchar(20) DEFAULT 'cliente',
-  `data_nascimento` datetime DEFAULT NULL,
-  `validacao` varchar(50) DEFAULT NULL
+  `validacao` varchar(50) DEFAULT NULL,
+  `data_nascimento` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `usuario`
 --
 
-INSERT INTO `usuario` (`cod_usuario`, `nome`, `email`, `senha`, `telefone`, `cpf`, `cnpj`, `tipo`, `data_nascimento`, `validacao`) VALUES
-(1, 'PEDRO LUCAS FREITAS DE OLIVEIRA', 'pedro.oliveira562@aluno.ce.gov.br', '123qwe', '(11) 11111-1111', '222.222.222-22', '', 'vendedor', NULL, NULL),
-(2, 'Shopin A', 'shopin.a2k24@gmail.com', '123qwe', '(00) 00000-0000', '', '', 'vendedor', NULL, NULL);
+INSERT INTO `usuario` (`cod_usuario`, `nome`, `email`, `senha`, `telefone`, `cpf`, `cnpj`, `foto`, `tipo`, `validacao`, `data_nascimento`) VALUES
+(6, 'pedrinho', 'pedrinho.jembamole@gmail.com', 'aws', '(88) 99735-3939', '088.952.883-78', '', '', 'vendedor', NULL, NULL),
+(7, 'PEDRO LUCAS FREITAS DE OLIVEIRA', 'pedro.oliveira562@aluno.ce.gov.br', '123qwe', '(12) 00000-0000', '000.000.000-00', '', '', 'vendedor', NULL, NULL),
+(100, 'Luiz felipe', 'luiz@gmail.com', 'aws', '(88) 99735-3939', '08895288378', '', NULL, 'cliente', NULL, NULL);
 
 --
 -- Índices para tabelas despejadas
@@ -263,7 +285,7 @@ ALTER TABLE `logistica`
 --
 ALTER TABLE `pedido`
   ADD PRIMARY KEY (`cod_pedido`),
-  ADD KEY `pedido_ibfk_1` (`cod_usuario`);
+  ADD KEY `cod_usuario` (`cod_usuario`);
 
 --
 -- Índices de tabela `possui`
@@ -277,8 +299,8 @@ ALTER TABLE `possui`
 --
 ALTER TABLE `produto`
   ADD PRIMARY KEY (`cod_produto`),
-  ADD KEY `cod_categoria` (`cod_categoria`),
-  ADD KEY `produto_ibfk_1` (`cod_usuario`);
+  ADD KEY `cod_usuario` (`cod_usuario`),
+  ADD KEY `cod_categoria` (`cod_categoria`);
 
 --
 -- Índices de tabela `usuario`
@@ -300,13 +322,13 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de tabela `endereco`
 --
 ALTER TABLE `endereco`
-  MODIFY `cod_endereco` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cod_endereco` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `foto`
 --
 ALTER TABLE `foto`
-  MODIFY `cod_foto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cod_foto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `logistica`
@@ -324,7 +346,7 @@ ALTER TABLE `produto`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `cod_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cod_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- Restrições para tabelas despejadas
@@ -334,40 +356,33 @@ ALTER TABLE `usuario`
 -- Restrições para tabelas `endereco`
 --
 ALTER TABLE `endereco`
-  ADD CONSTRAINT `endereco_ibfk_1` FOREIGN KEY (`cod_usuario`) REFERENCES `usuario` (`cod_usuario`);
+  ADD CONSTRAINT `fk_endereco_usuario` FOREIGN KEY (`cod_usuario`) REFERENCES `usuario` (`cod_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restrições para tabelas `foto`
 --
 ALTER TABLE `foto`
-  ADD CONSTRAINT `foto_ibfk_1` FOREIGN KEY (`cod_produto`) REFERENCES `produto` (`cod_produto`);
-
---
--- Restrições para tabelas `logistica`
---
-ALTER TABLE `logistica`
-  ADD CONSTRAINT `logistica_ibfk_1` FOREIGN KEY (`cod_pedido`) REFERENCES `pedido` (`cod_pedido`),
-  ADD CONSTRAINT `logistica_ibfk_2` FOREIGN KEY (`cod_usuario`) REFERENCES `usuario` (`cod_usuario`);
+  ADD CONSTRAINT `fk_foto_produto` FOREIGN KEY (`cod_produto`) REFERENCES `produto` (`cod_produto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restrições para tabelas `pedido`
 --
 ALTER TABLE `pedido`
-  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`cod_usuario`) REFERENCES `usuario` (`cod_usuario`);
+  ADD CONSTRAINT `fk_pedido_usuario` FOREIGN KEY (`cod_usuario`) REFERENCES `usuario` (`cod_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restrições para tabelas `possui`
 --
 ALTER TABLE `possui`
-  ADD CONSTRAINT `possui_ibfk_1` FOREIGN KEY (`cod_pedido`) REFERENCES `pedido` (`cod_pedido`),
-  ADD CONSTRAINT `possui_ibfk_2` FOREIGN KEY (`cod_produto`) REFERENCES `produto` (`cod_produto`);
+  ADD CONSTRAINT `fk_possui_pedido` FOREIGN KEY (`cod_pedido`) REFERENCES `pedido` (`cod_pedido`),
+  ADD CONSTRAINT `fk_possui_produto` FOREIGN KEY (`cod_produto`) REFERENCES `produto` (`cod_produto`);
 
 --
 -- Restrições para tabelas `produto`
 --
 ALTER TABLE `produto`
-  ADD CONSTRAINT `produto_ibfk_1` FOREIGN KEY (`cod_usuario`) REFERENCES `usuario` (`cod_usuario`),
-  ADD CONSTRAINT `produto_ibfk_2` FOREIGN KEY (`cod_categoria`) REFERENCES `categoria` (`cod_categoria`);
+  ADD CONSTRAINT `fk_produto_categoria` FOREIGN KEY (`cod_categoria`) REFERENCES `categoria` (`cod_categoria`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_produto_usuario` FOREIGN KEY (`cod_usuario`) REFERENCES `usuario` (`cod_usuario`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

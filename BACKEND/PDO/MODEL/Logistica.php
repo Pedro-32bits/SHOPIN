@@ -14,7 +14,7 @@ class Logistica {
 
     private $cod_logistica;
     private $cod_pedido;    // Chave Estrangeira (FK)
-    private $cod_vendedor;  // Chave Estrangeira (FK)
+    private $cod_usuario;
     private $frete;
     private $local_produto;
     private $status_entrega;
@@ -37,11 +37,11 @@ class Logistica {
     }
 
 
-    public function getCodVendedor() {
-        return $this->cod_vendedor;
+    public function getCodUsuario() {
+        return $this->cod_usuario;
     }
-    public function setCodVendedor($value) {
-        $this->cod_vendedor = $value;
+    public function setCodUsuario($value) {
+        $this->cod_usuario = $value;
     }
 
 

@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -57,10 +62,67 @@
         }
 
         .promo-banner {
-            background-color: var(--shopin-red);
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 12% 20%, rgba(245, 207, 105, 0.32), transparent 30%),
+                radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.2), transparent 24%),
+                linear-gradient(135deg, #A30F06 0%, #7f0b04 58%, #4e0905 100%);
+            border: 1px solid rgba(255, 255, 255, 0.22);
             border-radius: 2rem;
             color: white;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 22px 55px rgba(90, 18, 10, 0.28);
+        }
+
+        .promo-banner::before,
+        .promo-banner::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .promo-banner::before {
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            top: -75px;
+            border: 34px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+        }
+
+        .promo-banner::after {
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 12px;
+            background: repeating-linear-gradient(90deg, #f5cf69 0 38px, #ffffff 38px 76px, #A30F06 76px 114px);
+        }
+
+        .promo-slide {
+            background:
+                linear-gradient(100deg, rgba(255, 255, 255, 0.17), rgba(255, 255, 255, 0.06)),
+                rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(8px);
+        }
+
+        .promo-product-slide {
+            background:
+                linear-gradient(115deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06)),
+                rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(8px);
+        }
+
+        .promo-badge {
+            background: #f5cf69;
+            color: #5d0b05;
+            box-shadow: 0 7px 0 rgba(77, 9, 5, 0.35);
+        }
+
+        .promo-thumb {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.22);
         }
 
         .btn-banner {
@@ -116,13 +178,87 @@
     require __DIR__ . "/../BACKEND/PDO/DAO/ProdutoDAO.php";
     $produtoDao = new ProdutoDAO();
     $produtos = $produtoDao->listarComFotos();
-    $produtosDoCarrossel = array_values($produtos);
+    $produtosDoCarrossel = array_values(array_filter($produtos, function ($produto) {
+        return !empty($produto['promocao'])
+            && (float)$produto['promocao'] > 0
+            && (float)$produto['promocao'] < (float)$produto['valor'];
+    }));
 
     if ($produtosDoCarrossel) {
         $produtosDoCarrossel = array_slice($produtosDoCarrossel, 0, 5);
     }
     ?>
 
+    <!-- BANNER DE PROMOCOES -->
+    <section class="container mx-auto px-4 mt-8">
+        <div class="promo-banner px-5 py-6 md:px-8 md:py-8">
+            <?php if (!empty($produtosDoCarrossel)): ?>
+                <div id="promo-carousel" class="relative z-10">
+                    <div class="relative min-h-[520px] overflow-hidden rounded-[1.65rem] md:min-h-[440px]">
+                        <?php foreach ($produtosDoCarrossel as $index => $p): ?>
+                            <?php
+                            $foto = !empty($p['foto']) ? $p['foto'] : 'img/placeholder.php';
+                            $valorOriginal = (float)$p['valor'];
+                            $precoPromocional = (float)$p['promocao'];
+                            $desconto = $valorOriginal > 0 ? round((($valorOriginal - $precoPromocional) / $valorOriginal) * 100) : 0;
+                            ?>
+                            <a href="produto.php?cod=<?php echo $p['cod_produto']; ?>"
+                                class="promo-product-slide <?php echo $index === 0 ? 'flex' : 'hidden'; ?> min-h-[520px] w-full items-center justify-center rounded-[1.65rem] p-5 text-white no-underline shadow-2xl transition hover:no-underline md:min-h-[440px] md:p-8">
+                                <article class="grid w-full max-w-6xl items-center gap-7 md:grid-cols-[1fr_1.05fr]">
+                                    <div class="order-1 flex justify-center md:order-1">
+                                        <div class="relative flex h-72 w-full max-w-md items-center justify-center rounded-[1.5rem] bg-white p-6 shadow-[0_25px_55px_rgba(0,0,0,0.24)] md:h-80 md:max-w-lg">
+                                            <span class="promo-badge absolute -right-3 -top-3 rounded-2xl px-4 py-3 text-sm font-black uppercase leading-none">
+                                                <?php echo $desconto; ?>% off
+                                            </span>
+                                            <img src="<?php echo htmlspecialchars($foto); ?>" alt="<?php echo htmlspecialchars($p['nome']); ?>" class="max-h-full w-full object-contain" onerror="this.src='img/placeholder.php'">
+                                        </div>
+                                    </div>
+
+                                    <div class="order-2 text-center md:text-left">
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-[10px] font-black uppercase tracking-[0.28em] text-white ring-1 ring-white/25">
+                                            <i class="fa-solid fa-bolt"></i> Oferta em destaque
+                                        </span>
+                                        <h2 class="mt-5 break-words font-pagkaki text-4xl leading-tight md:text-6xl"><?php echo htmlspecialchars($p['nome']); ?></h2>
+                                        <p class="mt-3 text-sm font-semibold text-white/80 md:text-base">
+                                            <?php echo !empty($p['descricao']) ? htmlspecialchars($p['descricao']) : 'Produto selecionado com preco especial na Shopin.'; ?>
+                                        </p>
+
+                                        <div class="mt-6 flex flex-wrap items-end justify-center gap-3 md:justify-start">
+                                            <span class="text-base font-bold text-white/60 line-through">R$<?php echo number_format($valorOriginal, 2, ',', '.'); ?></span>
+                                            <span class="font-cordel text-5xl leading-none text-[#f5cf69] md:text-6xl">R$<?php echo number_format($precoPromocional, 2, ',', '.'); ?></span>
+                                        </div>
+
+                                        <span class="btn-banner mt-7 inline-flex items-center gap-2 rounded-full px-7 py-3 text-xs">
+                                            Ver produto <i class="fa-solid fa-arrow-right"></i>
+                                        </span>
+                                    </div>
+                                </article>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <?php if (count($produtosDoCarrossel) > 1): ?>
+                        <button type="button" class="promo-prev absolute left-3 top-1/2 z-30 flex -translate-y-1/2 items-center justify-center text-white focus:outline-none md:left-5">
+                            <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/35 shadow-lg transition hover:bg-black/55">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                        </button>
+                        <button type="button" class="promo-next absolute right-3 top-1/2 z-30 flex -translate-y-1/2 items-center justify-center text-white focus:outline-none md:right-5">
+                            <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/35 shadow-lg transition hover:bg-black/55">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </button>
+                    <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <div class="relative z-10 rounded-3xl border border-white/20 bg-white/10 p-8 text-center text-white shadow-xl">
+                    Nenhum produto em promocao no momento.
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <?php if (false): ?>
     <!-- BANNER DE DESTAQUE -->
     <section class="container mx-auto px-4 mt-8">
         <div class="promo-banner p-6 md:p-8">
@@ -180,6 +316,7 @@
             <?php endif; ?>
         </div>
     </section>
+    <?php endif; ?>
 
 
 
@@ -211,6 +348,42 @@
     </main>
 
     <?php include "UI/footer.php"; ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const carousel = document.getElementById('promo-carousel');
+            if (!carousel) {
+                return;
+            }
+
+            const slides = carousel.querySelectorAll('.promo-product-slide');
+            const previousButton = carousel.querySelector('.promo-prev');
+            const nextButton = carousel.querySelector('.promo-next');
+            let currentSlide = 0;
+
+            function showSlide(nextSlide) {
+                slides[currentSlide].classList.add('hidden');
+                slides[currentSlide].classList.remove('flex');
+                slides[nextSlide].classList.remove('hidden');
+                slides[nextSlide].classList.add('flex');
+                currentSlide = nextSlide;
+            }
+
+            if (previousButton) {
+                previousButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    showSlide((currentSlide - 1 + slides.length) % slides.length);
+                });
+            }
+
+            if (nextButton) {
+                nextButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    showSlide((currentSlide + 1) % slides.length);
+                });
+            }
+        });
+    </script>
 
 </body>
 <?php echo ob_get_clean(); ?>

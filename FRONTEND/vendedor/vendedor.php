@@ -14,16 +14,21 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo']  !== 'vendedor') {
 require __DIR__ . "/../../BACKEND/PDO/DAO/ProdutoDAO.php";
 require __DIR__ . "/../../BACKEND/PDO/DAO/CategoriaDAO.php";
 require __DIR__ . "/../../BACKEND/PDO/DAO/EnderecoDAO.php";
+require __DIR__ . "/../../BACKEND/PDO/DAO/PedidoDAO.php";
 
 $enderecoDao = new EnderecoDAO();
 $produtoDao = new ProdutoDAO();
 $categoriaDao = new CategoriaDAO();
+$pedidoDao = new PedidoDAO();
 
 $categorias = $categoriaDao->listar();
 $produtos = $produtoDao->listarPorVendedor($_SESSION['cod_usuario']);
 
 $enderecoVendedor = $enderecoDao->buscarPorCliente($_SESSION['cod_usuario']);
 $totalProdutos = count($produtos);
+$resumoVendas = $pedidoDao->resumoVendasPorVendedor($_SESSION['cod_usuario']);
+$totalVendas = (int) ($resumoVendas['total_vendas'] ?? 0);
+$totalArrecadado = (float) ($resumoVendas['total_arrecadado'] ?? 0);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -194,11 +199,11 @@ $totalProdutos = count($produtos);
             <div class="bg-white rounded-3xl p-6 shadow-xl border-l-[6px] border-green-500">
 
                 <span class="text-xs font-black text-gray-400 uppercase">
-                    Vendas do Mês
+                    Vendas totais
                 </span>
 
                 <h2 class="text-4xl font-black text-[#A30F06] mt-3">
-                    24
+                    <?php echo $totalVendas; ?>
                 </h2>
 
             </div>
@@ -210,7 +215,7 @@ $totalProdutos = count($produtos);
                 </span>
 
                 <h2 class="text-4xl font-black text-green-600 mt-3">
-                    R$ 2.450
+                    R$ <?php echo number_format($totalArrecadado, 2, ',', '.'); ?>
                 </h2>
 
             </div>

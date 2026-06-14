@@ -4,7 +4,7 @@
         // Create - Inserir item no pedido
         function inserir($possui) {
             include __DIR__ . "/../conexao.php";
-            $sql = "INSERT INTO possui (cod_pedido, cod_produto, qnt, avaliacao, resenha) VALUES (:cod_pedido, :cod_produto, :qnt, :avaliacao, :resenha)";
+            $sql = "INSERT INTO possui (cod_pedido, cod_produto, qnt, avaliacao, resenha, data_avaliacao) VALUES (:cod_pedido, :cod_produto, :qnt, :avaliacao, :resenha, :data_avaliacao)";
             
             $consulta = $conexao->prepare($sql); 
             $consulta->bindValue(":cod_pedido", $possui->getCodPedido());
@@ -12,6 +12,7 @@
             $consulta->bindValue(":qnt", $possui->getQnt());
             $consulta->bindValue(":avaliacao", $possui->getAvaliacao());
             $consulta->bindValue(":resenha", $possui->getResenha());
+            $consulta->bindValue(":data_avaliacao", $possui->getDataAvaliacao());
          
             if($consulta->execute()) {
                 return true;
@@ -29,7 +30,7 @@
         }
         function atualizar($possui) {
             include __DIR__ . "/../conexao.php";
-            $sql = "UPDATE possui SET qnt=:qnt, avaliacao=:avaliacao, resenha=:resenha WHERE cod_possui = :cod_possui AND cod_produto = :cod_produto";
+            $sql = "UPDATE possui SET qnt=:qnt, avaliacao=:avaliacao, resenha=:resenha, data_avaliacao=:data_avaliacao WHERE cod_possui = :cod_possui AND cod_produto = :cod_produto";
             
             $consulta = $conexao->prepare($sql);
             $consulta->bindValue(":cod_possui", $possui->getCodPossui());
@@ -37,6 +38,7 @@
             $consulta->bindValue(":qnt", $possui->getQnt());
             $consulta->bindValue(":avaliacao", $possui->getAvaliacao());
             $consulta->bindValue(":resenha", $possui->getResenha());
+            $consulta->bindValue(":data_avaliacao", $possui->getDataAvaliacao());
 
             if($consulta->execute()) {
                 return true;

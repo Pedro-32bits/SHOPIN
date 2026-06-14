@@ -1,16 +1,4 @@
 <?php
-/*
-CREATE TABLE `produto` (
-  `cod_produto` int(11) NOT NULL,
-  `cod_vendedor` int(11) DEFAULT NULL,
-  `cod_categoria` int(11) DEFAULT NULL,
-  `nome` varchar(100) DEFAULT NULL,
-  `marca` varchar(50) DEFAULT NULL,
-  `descricao` varchar(500) DEFAULT NULL,
-  `valor` decimal(10,2) DEFAULT NULL,
-  `promocao` decimal(10,2) DEFAULT NULL
-)
-*/
 
 class Produto {
     private $cod_produto;
@@ -22,6 +10,7 @@ class Produto {
     private $valor;
     private $promocao;
     private $estoque;
+    private $vendidos;
 
     public function getCod_produto() {
         return $this->cod_produto;
@@ -86,6 +75,11 @@ class Produto {
     public function setEstoque($value){
         $this -> estoque = $value;
     }
-
+    public function getVendidos(){
+        return $this -> vendidos;
+    }
+    public function setVendidos($value){
+        $this-> vendidos = $value;
+    }
 }
 ?>

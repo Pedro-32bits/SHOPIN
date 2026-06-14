@@ -24,7 +24,13 @@ class Pedido {
     public function getCod_pedido() {
         return $this->cod_pedido;
     }
+    public function getCodPedido() {
+        return $this->cod_pedido;
+    }
     public function setCod_pedido($value) {
+        $this->cod_pedido = $value;
+    }
+    public function setCodPedido($value) {
         $this->cod_pedido = $value;
     }
     // COD_USUARIO (Chave Estrangeira)

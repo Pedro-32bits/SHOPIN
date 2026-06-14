@@ -119,7 +119,7 @@ $usuario_logado = isset($_SESSION['cod_usuario']);
         <input type="hidden" name="cod_produto" value="<?php echo $cod; ?>">
         <input type="hidden" name="nome" value="<?php echo htmlspecialchars($produto['nome'] ?? ''); ?>">
         <input type="hidden" name="marca" value="<?php echo htmlspecialchars($produto['marca'] ?? ''); ?>">
-        <input type="hidden" name="preco" value="<?php echo $produto['promocao'] > 0 ? $produto['promocao'] : $produto['valor']; ?>">
+        <input type="hidden" name="preco" value="<?php echo !empty($produto['promocao']) && $produto['promocao'] > 0 ? $produto['promocao'] : ($produto['valor'] ?? 0); ?>">
         <input type="hidden" name="foto" value="<?php echo htmlspecialchars($fotos[0]['foto'] ?? 'img/placeholder.php'); ?>">
         <input type="hidden" name="quantidade" value="1">
     </form>
@@ -136,7 +136,7 @@ $usuario_logado = isset($_SESSION['cod_usuario']);
             thumb.classList.add('border-[#A30F06]');
         }
 
-        function adicionarAoCarrinho() {
+        function adicionarAoCarrinho(redirecionarPagamento = false) {
             <?php if (!$usuario_logado): ?>
                 if (confirm('Você precisa estar logado para adicionar produtos ao carrinho. Deseja fazer login agora?')) {
                     window.location.href = 'cliente/userLogin.php';
@@ -152,8 +152,12 @@ $usuario_logado = isset($_SESSION['cod_usuario']);
                 .then(response => response.json())
                 .then(data => {
                     if (data.sucesso) {
-                        alert(data.mensagem);
-                        location.reload(); // Recarregar para atualizar contador do carrinho
+                        if (redirecionarPagamento) {
+                            window.location.href = 'pagamento.php';
+                        } else {
+                            alert(data.mensagem);
+                            location.reload(); // Recarregar para atualizar contador do carrinho
+                        }
                     } else {
                         alert('Erro ao adicionar ao carrinho!');
                     }
@@ -171,10 +175,7 @@ $usuario_logado = isset($_SESSION['cod_usuario']);
                     window.location.href = 'cliente/userLogin.php';
                 }
             <?php else: ?>
-                adicionarAoCarrinho();
-                setTimeout(() => {
-                    window.location.href = 'cliente/usuario.php';
-                }, 500);
+                adicionarAoCarrinho(true);
             <?php endif; ?>
         }
     </script>
