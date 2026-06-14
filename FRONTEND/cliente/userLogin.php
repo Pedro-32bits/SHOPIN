@@ -46,10 +46,7 @@ if (isset($_GET['success']) && $_GET['success'] == "1") {
             <input type="email" name="email" class="auth-input" placeholder="seu@email.com" required>
 
             <label class="auth-label">Senha:</label>
-            <div class="auth-input-group">
-                <input type="password" name="senha" id="senha" class="auth-input" placeholder="Sua senha" required>
-                <span class="auth-toggle" onclick="togglePassword()">👁</span>
-            </div>
+            <input type="password" name="senha" id="senha" class="auth-input" placeholder="Sua senha" required>
 
             <div class="auth-botoes">
                 <button type="submit" name="acao" value="Logar" class="auth-btn auth-btn-submit">Entrar</button>
@@ -72,19 +69,6 @@ if (isset($_GET['success']) && $_GET['success'] == "1") {
     </div>
 
     <script src="../UI/global.js"></script>
-    <script>
-        function togglePassword() {
-            const senhaInput = document.getElementById('senha');
-            const toggleSpan = document.querySelector('.auth-toggle');
-            if (senhaInput.type === 'password') {
-                senhaInput.type = 'text';
-                toggleSpan.textContent = '👁‍🗨';
-            } else {
-                senhaInput.type = 'password';
-                toggleSpan.textContent = '👁';
-            }
-        }
-    </script>
 
 </body>
 

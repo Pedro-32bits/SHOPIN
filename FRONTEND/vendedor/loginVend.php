@@ -45,10 +45,7 @@ if (isset($_GET['erro'])) {
             <input type="text" name="email" class="auth-input" placeholder="user@gmail.com" required>
 
             <label class="auth-label">Senha:</label>
-            <div class="auth-input-group">
-                <input type="password" name="senha" id="senha" class="auth-input" placeholder="User12345..." required>
-                <span class="auth-toggle">👁</span>
-            </div>
+            <input type="password" name="senha" id="senha" class="auth-input" placeholder="User12345..." required>
 
             <label class="auth-label">CPF:</label>
             <input type="text" name="cpf" class="auth-input mask-cpf" placeholder="000.000.000-00" required>

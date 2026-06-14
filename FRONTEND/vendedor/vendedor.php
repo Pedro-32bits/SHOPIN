@@ -2,18 +2,27 @@
 
 session_start();
 
+
+
 if (!isset($_SESSION['tipo']) || $_SESSION['tipo']  !== 'vendedor') {
     header("Location: loginVend.php");
     exit();
 }
+// --- NOVO: Verificar endereço do vendedor ---
+
 
 require __DIR__ . "/../../BACKEND/PDO/DAO/ProdutoDAO.php";
 require __DIR__ . "/../../BACKEND/PDO/DAO/CategoriaDAO.php";
+require __DIR__ . "/../../BACKEND/PDO/DAO/EnderecoDAO.php";
 
+$enderecoDao = new EnderecoDAO();
 $produtoDao = new ProdutoDAO();
 $categoriaDao = new CategoriaDAO();
+
 $categorias = $categoriaDao->listar();
 $produtos = $produtoDao->listarPorVendedor($_SESSION['cod_usuario']);
+
+$enderecoVendedor = $enderecoDao->buscarPorCliente($_SESSION['cod_usuario']);
 $totalProdutos = count($produtos);
 ?>
 <!DOCTYPE html>
@@ -36,20 +45,30 @@ $totalProdutos = count($produtos);
     <div class="container mx-auto px-4 py-10">
 
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 border-b-4 border-[#A30F06] pb-4">
-
             <div>
                 <h2 class="text-5xl text-[#A30F06] font-black uppercase">
                     Meus Produtos
                 </h2>
-
                 <p class="text-gray-600 font-medium uppercase tracking-widest text-xs mt-2">
                     Gerencie seus produtos na SHOPIN A
                 </p>
             </div>
 
-            <button
-                onclick="abrirModalInserir()" class="mt-4 md:mt-0 bg-[#A30F06] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#7d0b04] transition flex items-center shadow-xl cursor-pointer"> <i class="fas fa-plus-circle mr-3"></i> ADICIONAR PRODUTO
-            </button>
+            <?php if ($enderecoVendedor): ?>
+                <button onclick="abrirModalInserir()" class="mt-4 md:mt-0 bg-[#A30F06] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#7d0b04] transition flex items-center shadow-xl cursor-pointer">
+                    <i class="fas fa-plus-circle mr-3"></i> ADICIONAR PRODUTO
+                </button>
+            <?php endif; ?>
+
+            <?php if (!$enderecoVendedor): ?>
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-2xl mb-6 shadow-md flex justify-between items-center">
+                    <div>
+                        <p class="font-black uppercase text-sm">⚠️ Atenção Vendedor!</p>
+                        <p class="text-xs">Você precisa cadastrar seu endereço no seu perfil de usuário antes de poder anunciar produtos.</p>
+                    </div>
+                    <a href="../cliente/usuario.php" class="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-600 transition">Cadastrar Agora</a>
+                </div>
+            <?php endif; ?>
 
         </div>
 
@@ -115,27 +134,27 @@ $totalProdutos = count($produtos);
 
                                 <td class="p-5">
                                     <div class="flex justify-center gap-3">
-                                        
-                                        <button type="button" 
-                                                onclick="abrirModalEditar(this)"
-                                                data-cod="<?php echo $produto['cod_produto']; ?>"
-                                                data-nome="<?php echo htmlspecialchars($produto['nome'], ENT_QUOTES, 'UTF-8'); ?>"
-                                                data-marca="<?php echo htmlspecialchars($produto['marca'], ENT_QUOTES, 'UTF-8'); ?>"
-                                                data-estoque="<?php echo $produto['estoque']; ?>"
-                                                
-                                                data-descricao="<?php echo htmlspecialchars($produto['descricao'], ENT_QUOTES, 'UTF-8'); ?>"
-                                                data-valor="<?php echo $produto['valor']; ?>"
-                                                data-promocao="<?php echo $produto['promocao']; ?>"
-                                                data-categoria="<?php echo $produto['cod_categoria']; ?>"
-                                                class="bg-blue-100 text-blue-600 w-11 h-11 rounded-xl hover:scale-105 transition flex items-center justify-center cursor-pointer" 
-                                                title="Editar Produto">
+
+                                        <button type="button"
+                                            onclick="abrirModalEditar(this)"
+                                            data-cod="<?php echo $produto['cod_produto']; ?>"
+                                            data-nome="<?php echo htmlspecialchars($produto['nome'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            data-marca="<?php echo htmlspecialchars($produto['marca'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            data-estoque="<?php echo $produto['estoque']; ?>"
+
+                                            data-descricao="<?php echo htmlspecialchars($produto['descricao'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            data-valor="<?php echo $produto['valor']; ?>"
+                                            data-promocao="<?php echo $produto['promocao']; ?>"
+                                            data-categoria="<?php echo $produto['cod_categoria']; ?>"
+                                            class="bg-blue-100 text-blue-600 w-11 h-11 rounded-xl hover:scale-105 transition flex items-center justify-center cursor-pointer"
+                                            title="Editar Produto">
                                             <i class="fas fa-edit"></i>
                                         </button>
 
                                         <form action="../../BACKEND/PDO/CONTROLLER/ProdutoController.php" method="POST" class="inline m-0" onsubmit="return confirm('Tem certeza absoluta que deseja apagar este produto?');">
                                             <input type="hidden" name="acao" value="Apagar">
                                             <input type="hidden" name="cod_produto" value="<?php echo $produto['cod_produto']; ?>">
-                                            
+
                                             <button type="submit" class="bg-red-100 text-red-600 w-11 h-11 rounded-xl hover:scale-105 transition flex items-center justify-center cursor-pointer" title="Excluir Produto">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -307,12 +326,12 @@ $totalProdutos = count($produtos);
         let selectedFiles = [];
 
         // --- NOVAS FUNÇÕES PARA O MODAL ---
-        
+
         function abrirModalInserir() {
             document.getElementById('modal_titulo').innerText = "Novo Produto";
             document.getElementById('modal_acao').value = "Inserir";
             document.getElementById('modal_cod_produto').value = "";
-            
+
             // Limpa todos os campos
             document.getElementById('modal_nome').value = "";
             document.getElementById('modal_marca').value = "";
@@ -327,8 +346,8 @@ $totalProdutos = count($produtos);
 
         function abrirModalEditar(botao) {
             document.getElementById('modal_titulo').innerText = "Editar Produto";
-            document.getElementById('modal_acao').value = "atualizar"; 
-            
+            document.getElementById('modal_acao').value = "atualizar";
+
             // Puxa os dados dos atributos data-* do botão
             document.getElementById('modal_cod_produto').value = botao.getAttribute('data-cod');
             document.getElementById('modal_nome').value = botao.getAttribute('data-nome');

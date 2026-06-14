@@ -1,13 +1,13 @@
-<?php 
+<?php
 session_start();
 
-// Verificar se o usuário está logado
+// 1. Verificar se o macaco está logado no galho certo
 if (!isset($_SESSION['cod_usuario'])) {
     header("Location: userLogin.php");
     exit();
 }
 
-// Variáveis da sessão
+// 2. Pegar as bananas (variáveis) da Sessão PRIMEIRO! 📦
 $cod_usuario = $_SESSION['cod_usuario'];
 $nome = $_SESSION['nome'] ?? '';
 $email = $_SESSION['email'] ?? '';
@@ -15,6 +15,14 @@ $telefone = $_SESSION['telefone'] ?? '';
 $cpf = $_SESSION['cpf'] ?? '';
 $carrinho = $_SESSION['carrinho'] ?? array();
 
+// 3. Chamar o Buscador de Endereço (DAO) 🗺️
+require_once __DIR__ . "/../../BACKEND/PDO/DAO/EnderecoDAO.php";
+$enderecoDao = new EnderecoDAO();
+
+// 4. CORREÇÃO AQUI: Passar o $cod_usuario (que é um número) e NÃO o $enderecoDao!
+$meuEndereco = $enderecoDao->buscarPorCliente($cod_usuario);
+
+// Mensagens de alerta
 $msg = "";
 if (isset($_GET['sucesso']) && $_GET['sucesso'] == "1") {
     $msg = '<div style="color: green; background: #d4edda; padding: 10px; border-radius: 5px; margin-bottom: 15px;">Dados atualizados com sucesso!</div>';
@@ -25,6 +33,7 @@ if (isset($_GET['erro'])) {
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,18 +46,20 @@ if (isset($_GET['erro'])) {
             src: url('../fonts/Pagkaki-Regular.otf') format('opentype');
             font-display: swap;
         }
+
         .font-pagkaki {
             font-family: 'Pagkaki', sans-serif;
         }
     </style>
 </head>
+
 <body class="bg-[#E6DED3]">
 
     <?php include "../UI/NAVBAR.php"; ?>
 
     <div class="container mx-auto px-4 py-10">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            
+
             <!-- SIDEBAR -->
             <aside class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-sm p-6 text-center border-b-4 border-[#A30F06]">
@@ -57,13 +68,13 @@ if (isset($_GET['erro'])) {
                             <img src="<?php echo strpos($_SERVER['PHP_SELF'], 'cliente') !== false ? '../' : ''; ?><?php echo !empty($foto_cliente) ? $foto_cliente : 'img/user-placeholder.php'; ?>" class="w-8 h-8 rounded-full object-cover" onerror="this.src='<?php echo strpos($_SERVER['PHP_SELF'], 'cliente') !== false ? '../' : ''; ?>img/placeholder.php'">
                         </div>
                     </div>
-                    
 
 
-                    
+
+
                     <h2 class="font-pagkaki text-2xl mt-4 text-gray-800"><?php echo htmlspecialchars($nome); ?></h2>
                     <p class="text-sm text-gray-500 italic">Cliente</p>
-                    
+
                     <nav class="mt-8 text-left space-y-2">
                         <a href="#perfil" class="flex items-center space-x-3 p-3 bg-[#A30F06] text-white rounded-xl font-bold">
                             <i class="fas fa-user w-5"></i> <span>Meu Perfil</span>
@@ -87,16 +98,16 @@ if (isset($_GET['erro'])) {
 
             <!-- CONTEÚDO PRINCIPAL -->
             <main class="lg:col-span-3 space-y-8">
-                
+
                 <?php echo $msg; ?>
-                
+
                 <!-- DADOS PESSOAIS -->
                 <div id="perfil" class="bg-white rounded-2xl shadow-sm p-8">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="font-pagkaki text-3xl text-[#A30F06]">Dados Pessoais</h3>
                         <button class="text-sm font-bold text-blue-600 hover:underline" onclick="editarPerfil()">Editar Dados</button>
                     </div>
-                    
+
                     <!-- MODO VISUALIZAÇÃO -->
                     <div id="view-perfil">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -127,7 +138,7 @@ if (isset($_GET['erro'])) {
                         <form method="POST" action="../../BACKEND/PDO/CONTROLLER/UsuarioController.php">
                             <input type="hidden" name="cod_usuario" value="<?php echo $cod_usuario; ?>">
                             <input type="hidden" name="acao" value="atualizar">
-                            
+
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Nome Completo</label>
@@ -165,7 +176,7 @@ if (isset($_GET['erro'])) {
                         <h3 class="font-pagkaki text-3xl text-[#A30F06]">Meu Carrinho</h3>
                         <span class="text-sm font-bold text-gray-600"><?php echo count($carrinho); ?> item(ns)</span>
                     </div>
-                    
+
                     <?php if (empty($carrinho)): ?>
                         <div class="text-center py-12">
                             <i class="fas fa-shopping-cart text-gray-300 text-6xl mb-4"></i>
@@ -174,9 +185,9 @@ if (isset($_GET['erro'])) {
                         </div>
                     <?php else: ?>
                         <div class="space-y-4">
-                            <?php 
+                            <?php
                             $total = 0;
-                            foreach ($carrinho as $item): 
+                            foreach ($carrinho as $item):
                                 $subtotal = $item['preco'] * $item['quantidade'];
                                 $total += $subtotal;
                             ?>
@@ -212,12 +223,25 @@ if (isset($_GET['erro'])) {
                 <div id="endereco" class="bg-white rounded-2xl shadow-sm p-8">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="font-pagkaki text-3xl text-[#A30F06]">Meus Endereços</h3>
-                        <button class="text-sm font-bold text-blue-600 hover:underline">+ Adicionar Endereço</button>
+
+                        <?php if (!$meuEndereco): ?>
+                            <button onclick="abrirModalEndereco()" class="text-sm font-bold text-blue-600 hover:underline">+ Adicionar Endereço</button>
+                        <?php endif; ?>
                     </div>
-                    <div class="text-center py-12">
-                        <i class="fas fa-map-marker-alt text-gray-300 text-4xl mb-4"></i>
-                        <p class="text-gray-500 font-medium">Nenhum endereço cadastrado</p>
-                    </div>
+
+                    <?php if ($meuEndereco): ?>
+                        <div class="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                            <p class="font-bold text-gray-800">Rua: <span class="font-normal"><?php echo htmlspecialchars($meuEndereco['rua']); ?>, Nº <?php echo htmlspecialchars($meuEndereco['num_casa']); ?></span></p>
+                            <p class="font-bold text-gray-800">Bairro: <span class="font-normal"><?php echo htmlspecialchars($meuEndereco['bairro']); ?></span></p>
+                            <p class="font-bold text-gray-800">CEP: <span class="font-normal"><?php echo htmlspecialchars($meuEndereco['CEP']); ?></span></p>
+                            <p class="font-bold text-gray-800">Referência: <span class="font-normal"><?php echo htmlspecialchars($meuEndereco['ponto_referencia']); ?></span></p>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-12">
+                            <i class="fas fa-map-marker-alt text-gray-300 text-4xl mb-4"></i>
+                            <p class="text-gray-500 font-medium">Nenhum endereço cadastrado</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
             </main>
@@ -230,6 +254,7 @@ if (isset($_GET['erro'])) {
         .auth-input-group {
             position: relative;
         }
+
         .auth-toggle {
             position: absolute;
             right: 10px;
@@ -268,21 +293,21 @@ if (isset($_GET['erro'])) {
                 formData.append('quantidade', novaQuantidade);
 
                 fetch('../../BACKEND/PDO/gerenciar_carrinho.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.sucesso) {
-                        location.reload();
-                    } else {
-                        alert('Erro ao atualizar quantidade!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar a requisição!');
-                });
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.sucesso) {
+                            location.reload();
+                        } else {
+                            alert('Erro ao atualizar quantidade!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Erro ao processar a requisição!');
+                    });
             }
         }
 
@@ -293,21 +318,21 @@ if (isset($_GET['erro'])) {
                 formData.append('cod_produto', codProduto);
 
                 fetch('../../BACKEND/PDO/gerenciar_carrinho.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.sucesso) {
-                        location.reload();
-                    } else {
-                        alert('Erro ao remover produto!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar a requisição!');
-                });
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.sucesso) {
+                            location.reload();
+                        } else {
+                            alert('Erro ao remover produto!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Erro ao processar a requisição!');
+                    });
             }
         }
 
@@ -317,24 +342,81 @@ if (isset($_GET['erro'])) {
                 formData.append('acao', 'limpar');
 
                 fetch('../../BACKEND/PDO/gerenciar_carrinho.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.sucesso) {
-                        location.reload();
-                    } else {
-                        alert('Erro ao limpar carrinho!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao processar a requisição!');
-                });
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.sucesso) {
+                            location.reload();
+                        } else {
+                            alert('Erro ao limpar carrinho!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Erro ao processar a requisição!');
+                    });
             }
+        }
+
+        function abrirModalEndereco() {
+            document.getElementById('modalEndereco').classList.remove('hidden');
+        }
+
+        function fecharModalEndereco() {
+            document.getElementById('modalEndereco').classList.add('hidden');
+        }
+
+        function mascaraCEP(input) {
+            let valor = input.value.replace(/\D/g, "");
+            valor = valor.replace(/^(\d{5})(\d)/, "$1-$2");
+            input.value = valor;
         }
     </script>
 
+
+    <div id="modalEndereco" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-[#E6DED3] w-full max-w-lg rounded-[28px] shadow-2xl overflow-hidden p-6">
+            <div class="flex justify-between items-center mb-4 border-b-2 border-[#A30F06] pb-2">
+                <h3 class="text-xl font-black text-[#A30F06] uppercase">Cadastrar Endereço</h3>
+                <button onclick="fecharModalEndereco()" class="text-2xl font-bold text-gray-600">&times;</button>
+            </div>
+
+            <form action="../../BACKEND/PDO/CONTROLLER/EnderecoController.php" method="POST" class="space-y-4">
+                <input type="hidden" name="acao" value="Inserir">
+                <input type="hidden" name="cod_usuario" value="<?php echo $cod_usuario; ?>">
+
+                <div>
+                    <label class="block text-xs font-black uppercase text-gray-500 mb-1">CEP</label>
+                    <input type="text" name="CEP" id="cep" oninput="mascaraCEP(this)" maxlength="9" required class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-black uppercase text-gray-500 mb-1">Rua</label>
+                    <input type="text" name="rua" required class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-black uppercase text-gray-500 mb-1">Bairro</label>
+                        <input type="text" name="bairro" required class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black uppercase text-gray-500 mb-1">Número da Casa</label>
+                        <input type="text" name="num_casa" required class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-black uppercase text-gray-500 mb-1">Ponto de Referência</label>
+                    <input type="text" name="ponto_referencia" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 outline-none">
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="fecharModalEndereco()" class="w-1/2 border-2 border-[#A30F06] text-[#A30F06] py-2 rounded-xl font-bold">Cancelar</button>
+                    <button type="submit" class="w-1/2 bg-[#A30F06] text-white py-2 rounded-xl font-bold hover:bg-[#7d0b04]">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>

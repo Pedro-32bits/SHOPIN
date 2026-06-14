@@ -27,9 +27,6 @@
             <label class="auth-label">Senha:</label>
             <input type="password" name="senha" class="auth-input" placeholder="Sua senha" required>
 
-            <label class="auth-label">Confirmar Senha:</label>
-            <input type="password" name="confirmar_senha" class="auth-input" placeholder="Confirme sua senha" required>
-
             <label class="auth-label">Telefone:</label>
             <input type="text" name="telefone" id="telefone" class="auth-input mask-phone" placeholder="(00)00000-0000" required>
 

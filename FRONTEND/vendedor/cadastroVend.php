@@ -33,8 +33,6 @@
             <label class="auth-label">Senha:</label>
             <input type="password" name="senha" class="auth-input" placeholder="Sua senha" required>
 
-            <label class="auth-label">Confirmar Senha:</label>
-            <input type="password" name="confirmar_senha" class="auth-input" placeholder="Confirme sua senha" required>
             <input type="hidden" name="tipo" value="vendedor">
 
             <div class="auth-botoes">
