@@ -325,7 +325,7 @@ $totalArrecadado = (float) ($resumoVendas['total_arrecadado'] ?? 0);
 
     </div>
 
-    <?php include "../UI/FOOTER.php"; ?>
+    <?php include "../UI/footer.php"; ?>
 
     <script>
         let selectedFiles = [];

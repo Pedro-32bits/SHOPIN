@@ -163,6 +163,6 @@ foreach ($carrinho as $item) {
         </div>
     </main>
 
-    <?php include "UI/FOOTER.php"; ?>
+    <?php include "UI/footer.php"; ?>
 </body>
 </html>
